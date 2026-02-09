@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Épreuve 3 - Service Final</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" type="image/jpeg" href="favicon.jpeg">
+  <audio id="bg-music" loop>
+    <source src="enigme2_ost.mp3" type="audio/mpeg">
+  </audio>
+</head>
+<body>
+  <div class="page-loader" id="page-loader">
+    <div class="loader-content">
+      <div class="loader-logo">
+        <div class="loader-symbols">
+          <span class="loader-symbol circle"></span>
+          <span class="loader-symbol triangle"></span>
+          <span class="loader-symbol square"></span>
+        </div>
+      </div>
+      <div class="loader-text">ÉPREUVE 3 — SERVICE FINAL</div>
+      <div class="loader-bar">
+        <div class="loader-progress"></div>
+      </div>
+      <div class="loader-status">Préparation du dernier service...</div>
+    </div>
+  </div>
+
+  <header class="header">
+    <a href="#" class="back-btn" id="back-btn">← Retour</a>
+    <div class="header-center">
+      <span class="page-badge">ÉPREUVE 3</span>
+    </div>
+    <div class="header-right"></div>
+  </header>
+
+  <main class="game-page">
+    <div class="game-container game-container-wide">
+      <div class="game-header">
+        <div class="game-icon-large">⭐</div>
+        <h1 class="pink">SERVICE FINAL</h1>
+        <p>Trouve les 3 métiers clés de l'hôtellerie-restauration pour réussir le grand service</p>
+      </div>
+
+      <div class="game-content">
+        <div class="locked-container hidden" id="locked">
+          <div class="locked-box">
+            <span class="lock-icon">🔒</span>
+            <h3>Épreuve verrouillée</h3>
+            <p>Termine d'abord le quiz restauration pour débloquer le service final.</p>
+            <a href="quiz.html" class="btn-primary">ALLER AU QUIZ</a>
+          </div>
+        </div>
+
+        <div class="game-layout-split" id="enigma-layout" style="display: grid;">
+          <div class="game-col-left">
+            <div class="mission-briefing-box height-match">
+              <div class="briefing-box-header">
+                <span class="briefing-box-icon">⭐</span>
+                <h3>ORDRE DE MISSION</h3>
+                <span class="briefing-box-tag">ÉPREUVE 3</span>
+              </div>
+              
+              <div class="briefing-box-content">
+                <div class="mission-context">
+                  <h4>🔥 MESSAGE DU CHEF</h4>
+                  <p>
+                    Le Chef t'a laissé un <strong>dernier défi</strong> sur le tableau de la cuisine :
+                  </p>
+                  <blockquote style="background: rgba(255,107,53,0.1); border-left: 3px solid #ff6b35; padding: 1rem; margin: 1rem 0; font-style: italic;">
+                    "Un hôtel-restaurant, c'est pas que la cuisine. 3 métiers font tourner la maison du sol au plafond. Trouve-les et t'auras ta place dans la brigade !"
+                  </blockquote>
+                </div>
+
+                <div class="mission-objective">
+                  <h4>🧩 LES 3 DEVINETTES DU CHEF</h4>
+                  <div style="background: rgba(0,0,0,0.2); padding: 0.8rem; border-radius: 8px; margin-bottom: 0.8rem;">
+                    <strong>🍽️ DEVINETTE 1 — CÔTÉ SALLE</strong><br>
+                    <em>"Je suis le chef d'orchestre de la salle de restaurant.<br>
+                    Je supervise les serveurs, j'accueille les clients importants et je veille à ce que le service soit impeccable.<br>
+                    Dans les grands établissements, c'est moi qui attribue les tables.<br>
+                    Qui suis-je ?"</em><br>
+                  </div>
+                  <div style="background: rgba(0,0,0,0.2); padding: 0.8rem; border-radius: 8px; margin-bottom: 0.8rem;">
+                    <strong>🏨 DEVINETTE 2 — CÔTÉ HÔTEL</strong><br>
+                    <em>"Je suis responsable de la propreté et du confort des chambres d'hôtel.<br>
+                    Je dirige une équipe de femmes et valets de chambre, je vérifie chaque détail avant l'arrivée des clients.<br>
+                    On m'appelle aussi la 'chef des étages'.<br>
+                    Qui suis-je ?"</em><br>
+                  </div>
+                  <div style="background: rgba(0,0,0,0.2); padding: 0.8rem; border-radius: 8px;">
+                    <strong>🔥 DEVINETTE 3 — CÔTÉ CUISINE</strong><br>
+                    <em>"Dans la brigade de cuisine, je suis spécialisé(e) dans un domaine précis : les sauces, les poissons, les viandes ou les desserts.<br>
+                    Je suis au-dessus du commis mais en dessous du sous-chef.<br>
+                    Le Chef me fait confiance pour gérer mon poste pendant le coup de feu.<br>
+                    Qui suis-je ?"</em><br>
+                  </div>
+                </div>
+
+                <div class="mission-rules">
+                  <h4>📜 RÈGLES DE LA CUISINE</h4>
+                  <ul>
+                    <li><span class="rule-icon">⏱️</span> Trouve les réponses avant la fin du chrono</li>
+                    <li><span class="rule-icon">🤝</span> Bosse avec ton équipe</li>
+                    <li><span class="rule-icon">🚫</span> Quitter la cuisine = Service annulé</li>
+                    <li><span class="rule-icon">💡</span> Un indice dispo auprès du maître du jeu</li>
+                  </ul>
+                </div>
+
+                <div class="mission-reward">
+                  <h4>⭐ DERNIÈRE ÉTOILE</h4>
+                  <div class="reward-preview">
+                    <span class="reward-icon-box">⭐</span>
+                    <div class="reward-details">
+                      <strong>Étoile mystère</strong>
+                      <span>À découvrir dans le livre de recettes</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="game-col-right">
+            <div class="game-content-inner height-match">
+              <div class="timer-section-centered">
+                <div class="warning-box" id="warning-box">
+                  <span class="warning-icon">⚠️</span>
+                  <p>Une fois le chrono lancé, si tu quittes la cuisine, c'est service annulé !</p>
+                </div>
+
+                <div class="timer-container">
+                  <div class="timer-display">
+                    <span class="timer-num" id="timer-min">05</span>
+                    <span class="timer-sep">:</span>
+                    <span class="timer-num" id="timer-sec">00</span>
+                  </div>
+                  <span class="timer-label">TEMPS RESTANT</span>
+                </div>
+
+                <button class="btn-primary" id="btn-start">LANCER LE CHRONO</button>
+
+                <div class="validation-container hidden" id="validation">
+                  <div class="validation-box">
+                    <h3>⏱️ Temps écoulé !</h3>
+                    <p>T'as trouvé les 3 métiers ?</p>
+                    <div class="validation-btns">
+                      <button class="btn-success" id="btn-yes">OUI CHEF, SERVICE ASSURÉ</button>
+                      <button class="btn-fail" id="btn-no">NON, J'AI PAS TROUVÉ</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="result-container-full hidden" id="result">
+          <div class="result-box" id="result-box">
+            <div class="result-icon" id="result-icon"></div>
+            <h3 id="result-title"></h3>
+            <p id="result-text"></p>
+            <a href="coffre.html" class="btn-primary btn-gold">🏆 VOIR LE LIVRE DE RECETTES</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="loader.js"></script>
+  <script src="gameState.js"></script>
+  <script src="enigme.js"></script>
+  <script src="music.js"></script>
+</body>
+</html>

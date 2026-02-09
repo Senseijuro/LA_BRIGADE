@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Épreuve 1 - Inventaire Cuisine</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" type="image/jpeg" href="favicon.jpeg">
+  <audio id="bg-music" loop>
+    <source src="enigme_ost.mp3" type="audio/mpeg">
+  </audio>
+</head>
+<body>
+  <div class="page-loader" id="page-loader">
+    <div class="loader-content">
+      <div class="loader-logo">
+        <div class="loader-symbols">
+          <span class="loader-symbol circle"></span>
+          <span class="loader-symbol triangle"></span>
+          <span class="loader-symbol square"></span>
+        </div>
+      </div>
+      <div class="loader-text">ÉPREUVE 1 — INVENTAIRE</div>
+      <div class="loader-bar">
+        <div class="loader-progress"></div>
+      </div>
+      <div class="loader-status">Inspection des cuisines...</div>
+    </div>
+  </div>
+
+  <header class="header">
+    <a href="#" class="back-btn" id="back-btn">← Retour</a>
+    <div class="header-center">
+      <span class="page-badge">ÉPREUVE 1</span>
+    </div>
+    <div class="header-right"></div>
+  </header>
+
+  <main class="game-page">
+    <div class="game-container game-container-wide">
+      <div class="game-header">
+        <div class="game-icon-large">🍳</div>
+        <h1 class="purple">INVENTAIRE DE LA BRIGADE</h1>
+        <p>Déchiffre les 3 codes du Chef pour prouver que tu connais l'hôtellerie-restauration</p>
+      </div>
+
+      <div class="game-content">
+        <div class="game-layout-split" id="enigme1-layout" style="display: grid;">
+          <div class="game-col-left">
+            <div class="mission-briefing-box scenario-theme height-match">
+              <div class="briefing-box-header">
+                <span class="briefing-box-icon">🍳</span>
+                <h3>ORDRE DE MISSION</h3>
+                <span class="briefing-box-tag">ÉPREUVE 1</span>
+              </div>
+              
+              <div class="briefing-box-content">
+                <div class="mission-context">
+                  <h4>👨‍🍳 LA SITUATION</h4>
+                  <p>
+                    Avant de te laisser toucher aux fourneaux ou accueillir un client, le Chef veut savoir si tu connais <strong>les deux faces du métier</strong> : la cuisine ET l'hôtellerie. 
+                    Il a caché <strong>3 devinettes techniques</strong> dans le restaurant. Trouve les bonnes réponses 
+                    pour prouver que tu mérites ta place dans la brigade.
+                  </p>
+                </div>
+
+                <div class="mission-objective">
+                  <h4>🧩 LES 3 DEVINETTES DU CHEF</h4>
+                  <div style="background: rgba(0,0,0,0.2); padding: 0.8rem; border-radius: 8px; margin-bottom: 0.8rem;">
+                    <strong>🍽️ DEVINETTE 1 — CÔTÉ RESTAURANT</strong><br>
+                    <em>"En restauration, on m'appelle la 'mise en place'.<br>
+                    Je désigne tout le travail de préparation fait AVANT le service : couper les légumes, préparer les sauces, dresser les tables.<br>
+                    Sans moi, le service est un chaos total.<br>
+                    Quel est le terme professionnel utilisé en cuisine pour désigner cette étape ?"</em><br>
+                  </div>
+                  <div style="background: rgba(0,0,0,0.2); padding: 0.8rem; border-radius: 8px; margin-bottom: 0.8rem;">
+                    <strong>🏨 DEVINETTE 2 — CÔTÉ HÔTEL</strong><br>
+                    <em>"Dans un hôtel, je suis le premier endroit que le client voit en arrivant.<br>
+                    C'est ici qu'on fait le check-in, qu'on remet les clés et qu'on renseigne les voyageurs.<br>
+                    Comment s'appelle cet espace et le poste de la personne qui y travaille ?"</em><br>
+                  </div>
+                  <div style="background: rgba(0,0,0,0.2); padding: 0.8rem; border-radius: 8px;">
+                    <strong>🔥 DEVINETTE 3 — CÔTÉ CUISINE</strong><br>
+                    <em>"Je suis une méthode de cuisson rapide et intense utilisée en cuisine professionnelle.<br>
+                    On fait sauter les aliments dans une poêle ou un wok à très haute température avec un peu de matière grasse.<br>
+                    Comment s'appelle cette technique ?"</em><br>
+                  </div>
+                </div>
+
+                <div class="mission-rules">
+                  <h4>📜 RÈGLES DE LA CUISINE</h4>
+                  <ul>
+                    <li><span class="rule-icon">⏱️</span> Trouve les réponses avant la fin du chrono</li>
+                    <li><span class="rule-icon">🤝</span> Bosse avec ton équipe</li>
+                    <li><span class="rule-icon">🚫</span> Quitter la cuisine = Service annulé</li>
+                    <li><span class="rule-icon">💡</span> Un indice dispo auprès du maître du jeu</li>
+                  </ul>
+                </div>
+
+                <div class="mission-reward">
+                  <h4>⭐ ÉTOILE À DÉBLOQUER</h4>
+                  <div class="reward-preview">
+                    <span class="reward-icon-box">🍳</span>
+                    <div class="reward-details">
+                      <strong>Étoile mystère</strong>
+                      <span>À découvrir dans le livre de recettes</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="game-col-right">
+            <div class="game-content-inner height-match">
+              <div class="timer-section-centered">
+                <div class="warning-box" id="warning-box">
+                  <span class="warning-icon">⚠️</span>
+                  <p>Une fois le chrono lancé, si tu quittes la cuisine, c'est service annulé !</p>
+                </div>
+
+                <div class="timer-container">
+                  <div class="timer-display">
+                    <span class="timer-num" id="timer-min">05</span>
+                    <span class="timer-sep">:</span>
+                    <span class="timer-num" id="timer-sec">00</span>
+                  </div>
+                  <span class="timer-label">TEMPS RESTANT</span>
+                </div>
+
+                <button class="btn-primary" id="btn-start">LANCER LE CHRONO</button>
+
+                <div class="validation-container hidden" id="validation">
+                  <div class="validation-box">
+                    <h3>⏱️ Temps écoulé !</h3>
+                    <p>T'as trouvé les 3 réponses ?</p>
+                    <div class="validation-btns">
+                      <button class="btn-success" id="btn-yes">OUI CHEF, C'EST BON</button>
+                      <button class="btn-fail" id="btn-no">NON, J'AI PAS TROUVÉ</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="result-container-full hidden" id="result">
+          <div class="result-box" id="result-box">
+            <div class="result-icon" id="result-icon"></div>
+            <h3 id="result-title"></h3>
+            <p id="result-text"></p>
+            <a href="quiz.html" class="btn-primary">CONTINUER →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="loader.js"></script>
+  <script src="gameState.js"></script>
+  <script src="enigme1.js"></script>
+  <script src="music.js"></script>
+</body>
+</html>
