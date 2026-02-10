@@ -4,34 +4,34 @@ document.addEventListener('DOMContentLoaded', function() {
 
   var questions = [
     { 
-      question: "En restauration, comment s'appelle la norme d'hygiène obligatoire qui impose de contrôler les températures, la traçabilité des aliments et la propreté en cuisine ?", 
+      question: "Combien d'étoiles maximum un restaurant peut-il recevoir au Guide Michelin ?", 
       options: [
-        "La norme ISO 9001", 
-        "La méthode HACCP", 
-        "Le protocole RGPD",
-        "La certification NF"
+        "2 étoiles", 
+        "3 étoiles", 
+        "5 étoiles",
+        "10 étoiles"
       ], 
       correct: 1 
     },
     { 
-      question: "Dans un hôtel, comment appelle-t-on le service qui permet aux clients de commander un repas directement dans leur chambre ?", 
+      question: "Avant de cuisiner ou de servir des clients, quelle est la première chose qu'un professionnel de la restauration doit TOUJOURS faire ?", 
       options: [
-        "Le catering", 
-        "Le self-service", 
-        "Le room service", 
-        "Le drive"
+        "Mettre sa toque", 
+        "Goûter les plats", 
+        "Se laver les mains", 
+        "Allumer les fourneaux"
       ], 
       correct: 2 
     },
     { 
-      question: "Dans une brigade de cuisine classique, quel est le rôle du 'commis' ?", 
+      question: "Dans un hôtel, comment appelle-t-on le repas du matin qui est souvent inclus dans le prix de la chambre ?", 
       options: [
-        "Il gère les réservations en salle", 
-        "Il dirige toute la cuisine", 
-        "Il s'occupe de la comptabilité du restaurant",
-        "Il assiste un chef de partie et apprend le métier"
+        "Le brunch", 
+        "Le room service", 
+        "Le petit-déjeuner continental",
+        "Le goûter"
       ], 
-      correct: 3 
+      correct: 2 
     }
   ];
 

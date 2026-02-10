@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
   var state = getGameState();
-  var timeLeft = 5; 
+  var timeLeft = 60; 
   var timerInterval = null;
   var timerRunning = false;
   var hasValidated = false;
