@@ -1,133 +1,173 @@
 document.addEventListener('DOMContentLoaded', function() {
   var state = getGameState();
-  var timeLeft = 60; 
-  var timerInterval = null;
-  var timerRunning = false;
-  var hasValidated = false;
+  var gameArea = document.getElementById('game-area');
+  var resultDiv = document.getElementById('result');
+  var arena = document.getElementById('mep-arena');
+  var correctEl = document.getElementById('mep-correct');
+  var progressEl = document.getElementById('mep-progress');
+  var errorsEl = document.getElementById('mep-errors');
 
-  var enigme1Layout = document.getElementById('enigme1-layout');
-  var validation = document.getElementById('validation');
-  var result = document.getElementById('result');
-  var btnStart = document.getElementById('btn-start');
-  var timerMin = document.getElementById('timer-min');
-  var timerSec = document.getElementById('timer-sec');
-  var warningBox = document.getElementById('warning-box');
-  var backBtn = document.getElementById('back-btn');
-  var btnYes = document.getElementById('btn-yes');
-  var btnNo = document.getElementById('btn-no');
-  var timerContainer = document.querySelector('.timer-container');
-
-  updateTimerDisplay(timerMin, timerSec, timeLeft);
-
-  // Si déjà terminé, afficher le résultat
   if (state.enigme1 && state.enigme1.completed !== null) {
-    hasValidated = true;
-    if (enigme1Layout) enigme1Layout.classList.add('hidden');
+    if (gameArea) gameArea.classList.add('hidden');
     showResult(state.enigme1.completed);
-    
-    if (backBtn) {
-      backBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        window.location.href = 'index.html';
-      });
-    }
     return;
   }
 
-  // S'assurer que le layout est visible
-  if (enigme1Layout) {
-    enigme1Layout.classList.remove('hidden');
-    enigme1Layout.style.display = 'grid';
+  // 10 bons ustensiles + 5 intrus
+  var goodItems = [
+    { emoji: '🍳', text: 'Poêle' },
+    { emoji: '🔪', text: 'Couteau de chef' },
+    { emoji: '🥄', text: 'Louche' },
+    { emoji: '🍲', text: 'Casserole' },
+    { emoji: '🧑‍🍳', text: 'Toque' },
+    { emoji: '🥣', text: 'Saladier' },
+    { emoji: '🫕', text: 'Marmite' },
+    { emoji: '🧤', text: 'Gant de four' },
+    { emoji: '⏲️', text: 'Minuteur' },
+    { emoji: '🧂', text: 'Sel & Poivre' }
+  ];
+
+  var badItems = [
+    { emoji: '⚽', text: 'Ballon' },
+    { emoji: '📱', text: 'Smartphone' },
+    { emoji: '🎸', text: 'Guitare' },
+    { emoji: '🧸', text: 'Peluche' },
+    { emoji: '🩴', text: 'Tongs' }
+  ];
+
+  // Construire la séquence: 15 items (10 bons + 5 mauvais) mélangés
+  var allItems = [];
+  goodItems.forEach(function(it) { allItems.push({ emoji: it.emoji, text: it.text, good: true }); });
+  badItems.forEach(function(it) { allItems.push({ emoji: it.emoji, text: it.text, good: false }); });
+
+  var order = getShuffledOrder('enigme1', allItems.length);
+  var sequence = order.map(function(i) { return allItems[i]; });
+
+  var currentIndex = 0;
+  var correctCount = 0;
+  var errorCount = 0;
+  var missedCount = 0;
+  var total = sequence.length;
+  var totalGood = 10;
+  var itemTimeout = null;
+  var gameOver = false;
+
+  function updateStats() {
+    if (correctEl) correctEl.textContent = '✅ ' + correctCount;
+    if (progressEl) progressEl.textContent = '📦 ' + currentIndex + ' / ' + total;
+    if (errorsEl) errorsEl.textContent = '❌ ' + (errorCount + missedCount);
   }
 
-  // Quitter via bouton retour = ÉCHOUÉ
-  if (backBtn) {
-    backBtn.addEventListener('click', function(e) {
-      e.preventDefault();
-      if (!hasValidated && timerRunning) {
-        if (!state.enigme1) state.enigme1 = { completed: null };
-        state.enigme1.completed = false;
-        saveGameState(state);
-        alert('⚠️ Vous avez quitté l\'épreuve. Mission échouée !');
+  function getRandomPos() {
+    var arenaRect = arena.getBoundingClientRect();
+    var maxX = Math.max(50, arenaRect.width - 100);
+    var maxY = Math.max(50, arenaRect.height - 100);
+    return {
+      x: Math.floor(Math.random() * maxX) + 10,
+      y: Math.floor(Math.random() * maxY) + 10
+    };
+  }
+
+  function spawnItem() {
+    if (gameOver || currentIndex >= total) { endGame(); return; }
+
+    var item = sequence[currentIndex];
+    var pos = getRandomPos();
+
+    var el = document.createElement('div');
+    el.className = 'mep-item';
+    el.style.left = pos.x + 'px';
+    el.style.top = pos.y + 'px';
+    el.innerHTML = '<span class="mep-item-emoji">' + item.emoji + '</span>' +
+                   '<span class="mep-item-text">' + item.text + '</span>';
+
+    el.addEventListener('click', function() {
+      if (el.classList.contains('correct-grab') || el.classList.contains('wrong-grab')) return;
+      clearTimeout(itemTimeout);
+
+      if (item.good) {
+        correctCount++;
+        el.classList.add('correct-grab');
+      } else {
+        errorCount++;
+        el.classList.add('wrong-grab');
       }
-      window.location.href = 'index.html';
-    });
-  }
+      updateStats();
 
-  // Quitter via fermeture/navigation = ÉCHOUÉ (seulement si timer en cours)
-  window.addEventListener('beforeunload', function() {
-    if (!hasValidated && timerRunning) {
-      if (!state.enigme1) state.enigme1 = { completed: null };
-      state.enigme1.completed = false;
-      saveGameState(state);
-    }
-  });
-
-  function scrollToValidation() {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    if (timerContainer) {
       setTimeout(function() {
-        timerContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }, 300);
-    }
-  }
+        if (el.parentNode) el.parentNode.removeChild(el);
+        currentIndex++;
+        if (currentIndex >= total) { endGame(); }
+        else { spawnItem(); }
+      }, 400);
+    });
 
-  function startTimer() {
-    if (timerRunning) return;
-    timerRunning = true;
-    if (btnStart) { btnStart.disabled = true; btnStart.textContent = 'EN COURS...'; }
-    if (warningBox) warningBox.classList.add('active');
+    arena.appendChild(el);
 
-    timerInterval = setInterval(function() {
-      timeLeft--;
-      updateTimerDisplay(timerMin, timerSec, timeLeft);
-      if (timeLeft <= 0) {
-        clearInterval(timerInterval);
-        timerRunning = false;
-        if (btnStart) btnStart.textContent = 'TERMINÉ';
-        if (warningBox) warningBox.classList.add('hidden');
-        if (validation) validation.classList.remove('hidden');
-        scrollToValidation();
+    // L'objet disparaît après 2.5s si pas cliqué
+    itemTimeout = setTimeout(function() {
+      if (el.parentNode) {
+        if (item.good) {
+          missedCount++; // Raté un bon ustensile
+          el.classList.add('missed');
+        } else {
+          // Bien ignoré un intrus, pas de pénalité
+          el.classList.add('missed');
+        }
+        updateStats();
+        setTimeout(function() {
+          if (el.parentNode) el.parentNode.removeChild(el);
+          currentIndex++;
+          if (currentIndex >= total) { endGame(); }
+          else { spawnItem(); }
+        }, 300);
       }
-    }, 1000);
+    }, 2500);
   }
 
-  function validate(success) {
-    hasValidated = true;
+  function endGame() {
+    if (gameOver) return;
+    gameOver = true;
+    clearTimeout(itemTimeout);
+
+    var success = correctCount >= 7 && (errorCount + missedCount) <= 4;
     if (!state.enigme1) state.enigme1 = { completed: null };
     state.enigme1.completed = success;
-    timerRunning = false;
-    if (timerInterval) clearInterval(timerInterval);
     saveGameState(state);
-    if (validation) validation.classList.add('hidden');
-    if (enigme1Layout) enigme1Layout.classList.add('hidden');
-    showResult(success);
+
+    setTimeout(function() {
+      if (gameArea) gameArea.classList.add('hidden');
+      showResult(success);
+    }, 500);
   }
 
   function showResult(success) {
-    if (result) result.classList.remove('hidden');
-    if (enigme1Layout) enigme1Layout.classList.add('hidden');
+    if (resultDiv) resultDiv.classList.remove('hidden');
+    if (gameArea) gameArea.classList.add('hidden');
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
     var resultBox = document.getElementById('result-box');
     var resultIcon = document.getElementById('result-icon');
     var resultTitle = document.getElementById('result-title');
     var resultText = document.getElementById('result-text');
+    var resultScore = document.getElementById('result-score');
+
+    if (resultScore) resultScore.textContent = correctCount + ' ustensiles attrapés';
 
     if (success) {
       if (resultBox) resultBox.classList.add('success');
       if (resultIcon) resultIcon.textContent = '✓';
-      if (resultTitle) resultTitle.textContent = 'ÉPREUVE RÉUSSIE !';
-      if (resultText) resultText.textContent = 'Bravo ! Vous avez débloqué une récompense dans le coffre.';
+      if (resultTitle) resultTitle.textContent = 'CUISINE PRÊTE !';
+      if (resultText) resultText.textContent = 'Bravo commis ! Ta mise en place est impeccable. Étoile débloquée !';
     } else {
       if (resultBox) resultBox.classList.add('fail');
       if (resultIcon) resultIcon.textContent = '✗';
-      if (resultTitle) resultTitle.textContent = 'ÉPREUVE ÉCHOUÉE';
-      if (resultText) resultText.textContent = 'Dommage ! La récompense reste verrouillée.';
+      if (resultTitle) resultTitle.textContent = 'MISE EN PLACE RATÉE';
+      if (resultText) resultText.textContent = 'Tu as raté trop d\'ustensiles ou attrapé trop d\'intrus. Étoile verrouillée.';
     }
   }
 
-  if (btnStart) btnStart.addEventListener('click', startTimer);
-  if (btnYes) btnYes.addEventListener('click', function() { validate(true); });
-  if (btnNo) btnNo.addEventListener('click', function() { validate(false); });
+  updateStats();
+  // Petit délai avant de commencer
+  setTimeout(function() { spawnItem(); }, 800);
 });

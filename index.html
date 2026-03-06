@@ -11,6 +11,7 @@
   </audio>
 </head>
 <body>
+
   <div class="page-loader" id="page-loader">
     <div class="loader-content">
       <div class="loader-logo">
@@ -21,9 +22,7 @@
         </div>
       </div>
       <div class="loader-text">DESTINATION APPRENTISSAGE</div>
-      <div class="loader-bar">
-        <div class="loader-progress"></div>
-      </div>
+      <div class="loader-bar"><div class="loader-progress"></div></div>
       <div class="loader-status">Ouverture des cuisines...</div>
     </div>
   </div>
@@ -73,168 +72,117 @@
       <div class="card">
         <h2>📋 RÈGLES DU JEU</h2>
         <ul class="rules-list">
-          <li>Découvrez d'abord le <strong>scénario</strong> pour comprendre votre mission</li>
-          <li>Complétez les 3 épreuves dans l'ordre pour débloquer vos récompenses</li>
+          <li>Complétez les 3 épreuves dans l'ordre pour débloquer vos étoiles</li>
           <li>Chaque épreuve réussie débloque une étoile dans le livre de recettes</li>
-          <li>Les timers ne peuvent être lancés qu'une seule fois</li>
-          <li><strong class="warning">⚠️ Si vous quittez pendant un timer, l'épreuve est automatiquement échouée !</strong></li>
+          <li><strong class="warning">⚠️ Vous avez 2 minutes pour TOUT terminer — le chrono tourne dès la 1ère épreuve !</strong></li>
         </ul>
       </div>
     </section>
 
-    <section class="main-game-section">
-      <div class="main-game-layout">
-        <div class="main-col-left">
-          <div class="briefing-card-index">
-            <div class="briefing-header">
-              <div class="briefing-icon">
-                <span class="icon-ring"></span>
-                <span class="icon-center">👨‍🍳</span>
-              </div>
-              <div class="briefing-title">
-                <span class="briefing-label" style="color: #ff6b35;">CARNET DE BRIGADE</span>
-                <h3 style="color: #ff6b35;">ORDRE DE SERVICE</h3>
-              </div>
-              <div class="briefing-stamp" style="color: #ff6b35;">LA BRIGADE</div>
-            </div>
-            
-            <div class="briefing-body">
-              <p class="briefing-intro">
-                <strong>Commis,</strong> le Chef t'a repéré(e) et te donne ta chance. Le restaurant du <span class="highlight">Lycée Jules Uhry</span> ouvre ce soir pour un service exceptionnel. C'est TOI qui dois prouver que tu as ta place dans la brigade !
-              </p>
-              
-              <div class="briefing-objectives">
-                <h4>🎯 ÉTAPES DU SERVICE</h4>
-                <ul>
-                  <li><span class="obj-number">01</span> Découvre le scénario et comprends la situation</li>
-                  <li><span class="obj-number">02</span> Réussis les épreuves de la brigade chronométrées</li>
-                  <li><span class="obj-number">03</span> Débloque tes étoiles dans le livre de recettes</li>
-                </ul>
-              </div>
-
-              <div class="briefing-warning">
-                <span class="warning-icon">⚠️</span>
-                <p>Le chrono tourne. Si tu quittes la cuisine pendant un défi, c'est <strong>GAME OVER</strong> pour cette épreuve !</p>
-              </div>
-            </div>
-
-            <div class="briefing-stats">
-              <div class="stat-card">
-                <span class="stat-icon">📖</span>
-                <span class="stat-number">1</span>
-                <span class="stat-text">HISTOIRE</span>
-              </div>
-              <div class="stat-card">
-                <span class="stat-icon">🔥</span>
-                <span class="stat-number">3</span>
-                <span class="stat-text">DÉFIS</span>
-              </div>
-              <div class="stat-card">
-                <span class="stat-icon">⭐</span>
-                <span class="stat-number">2</span>
-                <span class="stat-text">ÉTOILES</span>
-              </div>
-            </div>
-
-            <div class="briefing-footer">
-              <p>T'as le feu sacré ? Alors enfile ton tablier. Le service attend personne.</p>
-              <span class="footer-signature">— La Brigade du Chef</span>
-            </div>
+    <section class="briefing-section-centered">
+      <div class="briefing-card-index">
+        <div class="briefing-header">
+          <div class="briefing-icon">
+            <span class="icon-ring"></span>
+            <span class="icon-center">👨‍🍳</span>
+          </div>
+          <div class="briefing-title">
+            <span class="briefing-label" style="color: #ff6b35;">CARNET DE BRIGADE</span>
+            <h3 style="color: #ff6b35;">ORDRE DE SERVICE</h3>
+          </div>
+          <div class="briefing-stamp" style="color: #ff6b35;">LA BRIGADE</div>
+        </div>
+        <div class="briefing-body">
+          <p class="briefing-intro">
+            <strong>Commis,</strong> le Chef t'a repéré(e) et te donne ta chance. Le restaurant du <span class="highlight">Lycée Jules Uhry</span> ouvre ce soir pour un service exceptionnel. C'est TOI qui dois prouver que tu as ta place dans la brigade !
+          </p>
+          <div class="briefing-objectives">
+            <h4>🎯 ÉTAPES DU SERVICE</h4>
+            <ul>
+              <li><span class="obj-number">01</span> Lance la première épreuve — le chrono global démarre</li>
+              <li><span class="obj-number">02</span> Réussis les 3 épreuves avant que le temps s'écoule</li>
+              <li><span class="obj-number">03</span> Débloque tes étoiles dans le livre de recettes</li>
+            </ul>
+          </div>
+          <div class="briefing-warning">
+            <span class="warning-icon">⚠️</span>
+            <p>Tu as <strong>2 MINUTES</strong> pour tout terminer. Le chrono tourne sur toutes les pages. Pas de pause possible !</p>
           </div>
         </div>
+        <div class="briefing-stats">
+          <div class="stat-card">
+            <span class="stat-icon">🔥</span>
+            <span class="stat-number">3</span>
+            <span class="stat-text">DÉFIS</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-icon">⏱️</span>
+            <span class="stat-number">2</span>
+            <span class="stat-text">MINUTES</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-icon">⭐</span>
+            <span class="stat-number">3</span>
+            <span class="stat-text">ÉTOILES</span>
+          </div>
+        </div>
+        <div class="briefing-footer">
+          <p>T'as le feu sacré ? Alors enfile ton tablier. Le service attend personne.</p>
+          <span class="footer-signature">— La Brigade du Chef</span>
+        </div>
+      </div>
+    </section>
 
-        <div class="main-col-right">
-          <div class="slider-section-inline">
-            <h2 class="section-title">PARCOURS DES ÉPREUVES</h2>
-            
-            <div class="slider-container">
-              <button class="slider-btn prev" id="btn-prev">‹</button>
-              
-              <div class="slider-viewport">
-                <div class="slider-track" id="slider-track">
-                  <div class="slide" data-index="0">
-                    <div class="slide-card scenario-card" id="card-scenario">
-                      <div class="slide-badge">CONTEXTE</div>
-                      <div class="slide-icon">📖</div>
-                      <h3 class="purple">SCÉNARIO</h3>
-                      <p>Découvrez la brigade</p>
-                      <div class="slide-status" id="status-scenario">
-                        <span class="status-dot"></span>
-                        <span>À découvrir</span>
-                      </div>
-                      <a href="scenario.html" class="slide-btn" id="btn-scenario">DÉCOUVRIR</a>
-                    </div>
-                  </div>
+    <section class="epreuves-section">
+      <h2 class="epreuves-title">PARCOURS DES ÉPREUVES</h2>
+      <div class="epreuves-row">
+        <div class="epreuve-card" id="card-enigme1">
+          <div class="epreuve-badge">ÉPREUVE 1</div>
+          <div class="epreuve-icon">🍳</div>
+          <h3 class="purple">MISE EN PLACE</h3>
+          <p>Attrape les bons ustensiles au vol !</p>
+          <div class="epreuve-status" id="status-enigme1">
+            <span class="status-dot"></span><span>À faire</span>
+          </div>
+          <a href="enigme1.html" class="epreuve-btn" id="btn-enigme1">COMMENCER</a>
+        </div>
+        <div class="epreuve-card locked" id="card-quiz">
+          <div class="epreuve-badge">ÉPREUVE 2</div>
+          <div class="epreuve-icon">📝</div>
+          <h3 class="cyan">QUIZ RESTAURATION</h3>
+          <p>Test de connaissances cuisine</p>
+          <div class="epreuve-status" id="status-quiz">
+            <span class="status-dot"></span><span>🔒 Verrouillé</span>
+          </div>
+          <a href="quiz.html" class="epreuve-btn disabled" id="btn-quiz">VERROUILLÉ</a>
+        </div>
+        <div class="epreuve-card locked" id="card-enigma">
+          <div class="epreuve-badge">ÉPREUVE 3</div>
+          <div class="epreuve-icon">🍽️</div>
+          <h3 class="pink">LA COMMANDE PARFAITE</h3>
+          <p>Mémorise et retrouve les bons plats</p>
+          <div class="epreuve-status" id="status-enigma">
+            <span class="status-dot"></span><span>🔒 Verrouillé</span>
+          </div>
+          <a href="enigme.html" class="epreuve-btn disabled" id="btn-enigma">VERROUILLÉ</a>
+        </div>
+      </div>
+    </section>
 
-                  <div class="slide" data-index="1">
-                    <div class="slide-card" id="card-enigme1">
-                      <div class="slide-badge">ÉPREUVE 1</div>
-                      <div class="slide-icon">🍳</div>
-                      <h3 class="purple">INVENTAIRE CUISINE</h3>
-                      <p>Identifie les bases de la cuisine</p>
-                      <div class="slide-status" id="status-enigme1">
-                        <span class="status-dot"></span>
-                        <span>À faire</span>
-                      </div>
-                      <a href="enigme1.html" class="slide-btn" id="btn-enigme1">COMMENCER</a>
-                    </div>
-                  </div>
-
-                  <div class="slide" data-index="2">
-                    <div class="slide-card locked" id="card-quiz">
-                      <div class="slide-badge">ÉPREUVE 2</div>
-                      <div class="slide-icon">📝</div>
-                      <h3 class="cyan">QUIZ RESTAURATION</h3>
-                      <p>Test de connaissances</p>
-                      <div class="slide-status" id="status-quiz">
-                        <span class="status-dot"></span>
-                        <span>🔒 Verrouillé</span>
-                      </div>
-                      <a href="quiz.html" class="slide-btn disabled" id="btn-quiz">VERROUILLÉ</a>
-                    </div>
-                  </div>
-
-                  <div class="slide" data-index="3">
-                    <div class="slide-card locked" id="card-enigma">
-                      <div class="slide-badge">ÉPREUVE 3</div>
-                      <div class="slide-icon">⭐</div>
-                      <h3 class="pink">SERVICE FINAL</h3>
-                      <p>Le grand service</p>
-                      <div class="slide-status" id="status-enigma">
-                        <span class="status-dot"></span>
-                        <span>🔒 Verrouillé</span>
-                      </div>
-                      <a href="enigme.html" class="slide-btn disabled" id="btn-enigma">VERROUILLÉ</a>
-                    </div>
-                  </div>
-
-                  <div class="slide" data-index="4">
-                    <div class="slide-card coffre" id="card-coffre">
-                      <div class="slide-badge gold">FINAL</div>
-                      <div class="slide-icon">🏆</div>
-                      <h3 class="gold">LIVRE DE RECETTES</h3>
-                      <p>Récupérez vos étoiles</p>
-                      <div class="slide-status" id="status-coffre">
-                        <span class="status-dot"></span>
-                        <span>0/3 débloqué</span>
-                      </div>
-                      <a href="coffre.html" class="slide-btn gold">OUVRIR</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <button class="slider-btn next" id="btn-next">›</button>
-            </div>
-
-            <div class="slider-dots" id="slider-dots">
-              <span class="dot active" data-index="0"></span>
-              <span class="dot" data-index="1"></span>
-              <span class="dot" data-index="2"></span>
-              <span class="dot" data-index="3"></span>
-              <span class="dot" data-index="4"></span>
+    <section class="coffre-section-index">
+      <div class="coffre-banner">
+        <div class="coffre-banner-glow"></div>
+        <div class="coffre-banner-inner">
+          <div class="coffre-banner-icon">🏆</div>
+          <div class="coffre-banner-info">
+            <span class="coffre-banner-tag">LIVRE DE RECETTES</span>
+            <h2>LIVRE DE RECETTES</h2>
+            <p>Récupérez vos étoiles une fois les épreuves terminées</p>
+            <div class="epreuve-status" id="status-coffre">
+              <span class="status-dot"></span><span>0/3 débloqué</span>
             </div>
           </div>
+          <a href="coffre.html" class="coffre-banner-btn">OUVRIR LE LIVRE →</a>
         </div>
       </div>
     </section>
@@ -266,7 +214,7 @@
         <div class="footer-qr">
           <div class="qr-box">
             <div class="qr-placeholder" id="qr-code">
-              <img src="qrcode.png" alt="QR Code - Accéder au jeu" class="qr-img">
+              <img src="qrcode.png" alt="QR Code" class="qr-img">
             </div>
             <p class="qr-label">Scannez pour accéder aux questions</p>
           </div>
@@ -280,6 +228,7 @@
 
   <script src="loader.js"></script>
   <script src="gameState.js"></script>
+  <script src="globalTimer.js"></script>
   <script src="index.js"></script>
   <script src="music.js"></script>
 </body>

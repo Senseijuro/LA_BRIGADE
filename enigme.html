@@ -3,14 +3,87 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Épreuve 3 - Service Final</title>
+  <title>Épreuve 3 - La Commande Parfaite</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="icon" type="image/jpeg" href="favicon.jpeg">
-  <audio id="bg-music" loop>
-    <source src="enigme2_ost.mp3" type="audio/mpeg">
-  </audio>
+  <audio id="bg-music" loop><source src="enigme2_ost.mp3" type="audio/mpeg"></audio>
+  <style>
+    .cmd-game { padding: 1rem 0; }
+    .cmd-score-bar {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0.75rem 1rem; background: rgba(0,0,0,0.3);
+      border: 1px solid var(--border); border-radius: 10px; margin-bottom: 1rem; font-size: 0.9rem;
+    }
+    .cmd-round { color: var(--cyan); font-weight: 600; }
+    .cmd-score { color: var(--green); font-weight: 600; }
+    .cmd-errors { color: var(--red); font-weight: 600; }
+
+    .cmd-customer-box {
+      display: flex; align-items: center; gap: 1rem; padding: 1rem 1.2rem;
+      background: rgba(168,85,247,0.08); border: 1px solid rgba(168,85,247,0.3);
+      border-radius: 14px; margin-bottom: 1rem;
+    }
+    .cmd-customer-avatar { font-size: 3rem; flex-shrink: 0; }
+    .cmd-customer-msg { font-size: 0.85rem; color: var(--gray-light); line-height: 1.5; }
+
+    /* Phase mémorisation */
+    .cmd-order-display {
+      display: flex; justify-content: center; gap: 0.8rem; flex-wrap: wrap;
+      margin-bottom: 1.5rem; min-height: 120px; align-items: center;
+    }
+    .cmd-order-item {
+      display: flex; flex-direction: column; align-items: center; gap: 0.3rem;
+      padding: 1rem; background: rgba(255,215,0,0.08); border: 2px solid rgba(255,215,0,0.4);
+      border-radius: 14px; animation: cmdPulse 1s ease infinite alternate;
+    }
+    .cmd-order-item-emoji { font-size: 2.5rem; }
+    .cmd-order-item-text { font-size: 0.75rem; color: var(--gold); font-weight: 600; }
+    @keyframes cmdPulse { from{box-shadow:0 0 10px rgba(255,215,0,0.1)} to{box-shadow:0 0 25px rgba(255,215,0,0.3)} }
+
+    .cmd-timer-bar { text-align: center; margin-bottom: 1rem; }
+    .cmd-timer-text { font-size: 1.2rem; font-weight: 700; color: var(--pink); }
+    .cmd-timer-label { font-size: 0.75rem; color: var(--gray); display: block; margin-top: 0.3rem; }
+
+    /* Phase sélection */
+    .cmd-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.6rem;
+      max-width: 500px; margin: 0 auto 1rem;
+    }
+    .cmd-dish {
+      display: flex; flex-direction: column; align-items: center; gap: 0.3rem;
+      padding: 0.8rem 0.5rem; background: rgba(255,255,255,0.03);
+      border: 2px solid var(--border); border-radius: 14px;
+      cursor: pointer; transition: all 0.3s; text-align: center;
+    }
+    .cmd-dish:hover { border-color: var(--cyan); background: rgba(0,212,255,0.05); transform: translateY(-2px); }
+    .cmd-dish-emoji { font-size: 2rem; }
+    .cmd-dish-text { font-size: 0.65rem; color: var(--gray); }
+    .cmd-dish.selected-correct { border-color: var(--green); background: rgba(0,255,136,0.1); pointer-events: none; }
+    .cmd-dish.selected-correct .cmd-dish-text { color: var(--green); font-weight: 600; }
+    .cmd-dish.selected-wrong { border-color: var(--red); background: rgba(255,68,68,0.1); pointer-events: none; opacity: 0.5; animation: shake 0.4s ease; }
+    .cmd-dish.selected-wrong .cmd-dish-text { color: var(--red); text-decoration: line-through; }
+
+    @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)} 40%{transform:translateX(8px)} 60%{transform:translateX(-5px)} 80%{transform:translateX(5px)} }
+
+    .cmd-phase-msg {
+      text-align: center; padding: 1rem; margin-bottom: 1rem;
+      font-size: 1rem; font-weight: 700; color: var(--pink);
+      animation: cmdBlink 0.6s ease infinite alternate;
+    }
+    @keyframes cmdBlink { from{opacity:0.6} to{opacity:1} }
+
+    .cmd-hint { text-align: center; color: var(--gray); font-size: 0.8rem; }
+
+    @media(max-width:450px) {
+      .cmd-grid { grid-template-columns: repeat(3, 1fr); }
+      .cmd-order-item { padding: 0.7rem; }
+      .cmd-order-item-emoji { font-size: 2rem; }
+      .cmd-customer-box { flex-direction: column; text-align: center; }
+    }
+  </style>
 </head>
 <body>
+
   <div class="page-loader" id="page-loader">
     <div class="loader-content">
       <div class="loader-logo">
@@ -20,28 +93,24 @@
           <span class="loader-symbol square"></span>
         </div>
       </div>
-      <div class="loader-text">ÉPREUVE 3 — SERVICE FINAL</div>
-      <div class="loader-bar">
-        <div class="loader-progress"></div>
-      </div>
-      <div class="loader-status">Préparation du dernier service...</div>
+      <div class="loader-text">ÉPREUVE 3 — LA COMMANDE</div>
+      <div class="loader-bar"><div class="loader-progress"></div></div>
+      <div class="loader-status">Préparation du service...</div>
     </div>
   </div>
 
   <header class="header">
-    <a href="#" class="back-btn" id="back-btn">← Retour</a>
-    <div class="header-center">
-      <span class="page-badge">ÉPREUVE 3</span>
-    </div>
+    <a href="index.html" class="back-btn" id="back-btn">← Retour</a>
+    <div class="header-center"><span class="page-badge">ÉPREUVE 3</span></div>
     <div class="header-right"></div>
   </header>
 
   <main class="game-page">
     <div class="game-container game-container-wide">
       <div class="game-header">
-        <div class="game-icon-large">⭐</div>
-        <h1 class="pink">SERVICE FINAL</h1>
-        <p>Trouve les 3 métiers clés de l'hôtellerie-restauration pour réussir le grand service</p>
+        <div class="game-icon-large">🍽️</div>
+        <h1 class="pink">LA COMMANDE PARFAITE</h1>
+        <p>Mémorise la commande du client, puis retrouve les bons plats !</p>
       </div>
 
       <div class="game-content">
@@ -49,109 +118,37 @@
           <div class="locked-box">
             <span class="lock-icon">🔒</span>
             <h3>Épreuve verrouillée</h3>
-            <p>Termine d'abord le quiz restauration pour débloquer le service final.</p>
+            <p>Termine d'abord le quiz pour débloquer cette épreuve.</p>
             <a href="quiz.html" class="btn-primary">ALLER AU QUIZ</a>
           </div>
         </div>
 
-        <div class="game-layout-split" id="enigma-layout" style="display: grid;">
-          <div class="game-col-left">
-            <div class="mission-briefing-box height-match">
-              <div class="briefing-box-header">
-                <span class="briefing-box-icon">⭐</span>
-                <h3>ORDRE DE MISSION</h3>
-                <span class="briefing-box-tag">ÉPREUVE 3</span>
-              </div>
-              
-              <div class="briefing-box-content">
-                <div class="mission-context">
-                  <h4>🔥 MESSAGE DU CHEF</h4>
-                  <p>
-                    Le Chef t'a laissé un <strong>dernier défi</strong> sur le tableau de la cuisine :
-                  </p>
-                  <blockquote style="background: rgba(255,107,53,0.1); border-left: 3px solid #ff6b35; padding: 1rem; margin: 1rem 0; font-style: italic;">
-                    "Un hôtel-restaurant, c'est pas que la cuisine. 3 métiers font tourner la maison du sol au plafond. Trouve-les et t'auras ta place dans la brigade !"
-                  </blockquote>
-                </div>
+        <div id="game-area" class="cmd-game">
+          <div class="cmd-score-bar">
+            <span class="cmd-round" id="cmd-round">🍽️ Client 1 / 3</span>
+            <span class="cmd-score" id="cmd-score">✅ 0</span>
+            <span class="cmd-errors" id="cmd-errors">❌ 0</span>
+          </div>
 
-                <div class="mission-objective">
-                  <h4>🧩 LES 3 DEVINETTES DU CHEF</h4>
-                  <div style="background: rgba(0,0,0,0.2); padding: 0.8rem; border-radius: 8px; margin-bottom: 0.8rem;">
-                    <strong>🍽️ DEVINETTE 1 — CÔTÉ SALLE</strong><br>
-                    <em>"Au restaurant, je suis la liste de tous les plats que tu peux commander.<br>
-                    Entrées, plats, desserts, boissons : tout est écrit sur moi.<br>
-                    Le serveur me donne quand tu t'installes à table.<br>
-                    Comment je m'appelle ?"</em><br>
-                  </div>
-                  <div style="background: rgba(0,0,0,0.2); padding: 0.8rem; border-radius: 8px; margin-bottom: 0.8rem;">
-                    <strong>🏨 DEVINETTE 2 — CÔTÉ HÔTEL</strong><br>
-                    <em>"Dans un hôtel, les chambres sont classées avec des étoiles : 1 étoile, 2 étoiles... jusqu'à 5 étoiles.<br>
-                    Plus il y a d'étoiles, plus l'hôtel est luxueux et cher.<br>
-                    Combien d'étoiles a un hôtel considéré comme le plus haut standing en France ?"</em><br>
-                  </div>
-                  <div style="background: rgba(0,0,0,0.2); padding: 0.8rem; border-radius: 8px;">
-                    <strong>🔥 DEVINETTE 3 — CÔTÉ CUISINE</strong><br>
-                    <em>"Quand tu commandes un repas complet au restaurant, les plats arrivent dans un certain ordre.<br>
-                    D'abord on mange quelque chose de léger pour commencer, puis le plat principal, et enfin quelque chose de sucré à la fin.<br>
-                    Comment s'appelle le dernier plat, celui qui est sucré ?"</em><br>
-                  </div>
-                </div>
+          <div class="cmd-customer-box">
+            <div class="cmd-customer-avatar" id="cmd-avatar">🧑</div>
+            <p class="cmd-customer-msg" id="cmd-msg">Bonjour ! Voici ma commande, mémorise-la bien...</p>
+          </div>
 
-                <div class="mission-rules">
-                  <h4>📜 RÈGLES DE LA CUISINE</h4>
-                  <ul>
-                    <li><span class="rule-icon">⏱️</span> Trouve les réponses avant la fin du chrono</li>
-                    <li><span class="rule-icon">🤝</span> Bosse avec ton équipe</li>
-                    <li><span class="rule-icon">🚫</span> Quitter la cuisine = Service annulé</li>
-                    <li><span class="rule-icon">💡</span> Un indice dispo auprès du maître du jeu</li>
-                  </ul>
-                </div>
-
-                <div class="mission-reward">
-                  <h4>⭐ DERNIÈRE ÉTOILE</h4>
-                  <div class="reward-preview">
-                    <span class="reward-icon-box">⭐</span>
-                    <div class="reward-details">
-                      <strong>Étoile mystère</strong>
-                      <span>À découvrir dans le livre de recettes</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
+          <!-- Zone d'affichage de la commande (phase mémo) -->
+          <div id="cmd-memo-zone">
+            <div class="cmd-order-display" id="cmd-order-display"></div>
+            <div class="cmd-timer-bar">
+              <span class="cmd-timer-text" id="cmd-timer">5</span>
+              <span class="cmd-timer-label">secondes pour mémoriser</span>
             </div>
           </div>
 
-          <div class="game-col-right">
-            <div class="game-content-inner height-match">
-              <div class="timer-section-centered">
-                <div class="warning-box" id="warning-box">
-                  <span class="warning-icon">⚠️</span>
-                  <p>Une fois le chrono lancé, si tu quittes la cuisine, c'est service annulé !</p>
-                </div>
-
-                <div class="timer-container">
-                  <div class="timer-display">
-                    <span class="timer-num" id="timer-min">05</span>
-                    <span class="timer-sep">:</span>
-                    <span class="timer-num" id="timer-sec">00</span>
-                  </div>
-                  <span class="timer-label">TEMPS RESTANT</span>
-                </div>
-
-                <button class="btn-primary" id="btn-start">LANCER LE CHRONO</button>
-
-                <div class="validation-container hidden" id="validation">
-                  <div class="validation-box">
-                    <h3>⏱️ Temps écoulé !</h3>
-                    <p>T'as trouvé les 3 métiers ?</p>
-                    <div class="validation-btns">
-                      <button class="btn-success" id="btn-yes">OUI CHEF, SERVICE ASSURÉ</button>
-                      <button class="btn-fail" id="btn-no">NON, J'AI PAS TROUVÉ</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+          <!-- Zone de sélection (phase choix) -->
+          <div id="cmd-select-zone" style="display:none;">
+            <div class="cmd-phase-msg">🔍 Retrouve les plats de la commande !</div>
+            <div class="cmd-grid" id="cmd-grid"></div>
+            <p class="cmd-hint" id="cmd-hint">Clique sur les plats que le client a commandés</p>
           </div>
         </div>
 
@@ -160,6 +157,7 @@
             <div class="result-icon" id="result-icon"></div>
             <h3 id="result-title"></h3>
             <p id="result-text"></p>
+            <p class="result-score" id="result-score"></p>
             <a href="coffre.html" class="btn-primary btn-gold">🏆 VOIR LE LIVRE DE RECETTES</a>
           </div>
         </div>
@@ -169,6 +167,7 @@
 
   <script src="loader.js"></script>
   <script src="gameState.js"></script>
+  <script src="globalTimer.js"></script>
   <script src="enigme.js"></script>
   <script src="music.js"></script>
 </body>

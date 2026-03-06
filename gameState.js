@@ -4,11 +4,12 @@
 // ==========================================
 
 var STORAGE_KEY = 'destinationApprentissage';
+var TIMER_KEY = 'globalTimerStart';
 
 var defaultState = {
-  enigme1: { completed: null },  // Épreuve 1 : Les Indices du Saboteur
-  quiz: { completed: null, score: 0 },  // Épreuve 2 : Quiz BTP
-  enigma: { completed: null }  // Épreuve 3 : Les Gardiens du Chantier
+  enigme1: { completed: null },
+  quiz: { completed: null, score: 0 },
+  enigma: { completed: null }
 };
 
 function getGameState() {
@@ -16,7 +17,6 @@ function getGameState() {
   if (saved) {
     try {
       var parsed = JSON.parse(saved);
-      // Fusionner avec les valeurs par défaut pour les nouvelles propriétés
       return {
         enigme1: parsed.enigme1 || { completed: null },
         quiz: parsed.quiz || { completed: null, score: 0 },
@@ -35,6 +35,36 @@ function saveGameState(state) {
 
 function resetGameState() {
   localStorage.removeItem(STORAGE_KEY);
+  localStorage.removeItem(TIMER_KEY);
+  localStorage.removeItem('shuffle_enigme1');
+  localStorage.removeItem('shuffle_quiz');
+  localStorage.removeItem('shuffle_enigma');
+}
+
+function getShuffledOrder(key, length) {
+  var saved = localStorage.getItem('shuffle_' + key);
+  if (saved) {
+    try {
+      var parsed = JSON.parse(saved);
+      if (parsed.length === length) return parsed;
+    } catch (e) {}
+  }
+  // Générer un nouvel ordre
+  var order = [];
+  for (var i = 0; i < length; i++) order.push(i);
+  for (var i = order.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = order[i]; order[i] = order[j]; order[j] = tmp;
+  }
+  localStorage.setItem('shuffle_' + key, JSON.stringify(order));
+  return order;
+}
+
+function allGamesCompleted() {
+  var state = getGameState();
+  return (state.enigme1 && state.enigme1.completed !== null) &&
+         (state.quiz && state.quiz.completed !== null) &&
+         (state.enigma && state.enigma.completed !== null);
 }
 
 function formatTime(seconds) {
