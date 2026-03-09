@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Épreuve 3 - Problème à l'Hôtel</title>
+  
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/enigme.css">
+  <link rel="icon" type="image/jpeg" href="img/favicon.jpeg">
+  
+  <audio id="bg-music" loop>
+    <source src="audio/enigme2_ost.mp3" type="audio/mpeg">
+  </audio>
+</head>
+<body>
+
+  <div class="page-loader" id="page-loader">
+    <div class="loader-content">
+      <div class="loader-logo">
+        <div class="loader-symbols">
+          <span class="loader-symbol circle"></span>
+          <span class="loader-symbol triangle"></span>
+          <span class="loader-symbol square"></span>
+        </div>
+      </div>
+      <div class="loader-text">ÉPREUVE 3 — PROBLÈME À L'HÔTEL</div>
+      <div class="loader-bar">
+        <div class="loader-progress"></div>
+      </div>
+      <div class="loader-status">Ouverture de la réception...</div>
+    </div>
+  </div>
+
+  <header class="header">
+    <a href="index.html" class="back-btn" id="back-btn">← Retour</a>
+    <div class="header-center">
+      <span class="page-badge">ÉPREUVE 3</span>
+    </div>
+    <div class="header-right"></div>
+  </header>
+
+  <main class="game-page">
+    <div class="game-container game-container-wide">
+      
+      <div class="game-header">
+        <div class="game-icon-large">🏨</div>
+        <h1 class="pink">PROBLÈME À L'HÔTEL</h1>
+        <p>Un client a besoin d'aide — quel professionnel doit intervenir ?</p>
+      </div>
+
+      <div class="game-content">
+        
+        <div class="locked-container hidden" id="locked">
+          <div class="locked-box">
+            <span class="lock-icon">🔒</span>
+            <h3>Épreuve verrouillée</h3>
+            <p>Termine d'abord l'épreuve 2.</p>
+            <a href="quiz.html" class="btn-primary">ALLER À L'ÉPREUVE 2</a>
+          </div>
+        </div>
+
+        <div id="game-area" class="hotel-game">
+          
+          <div class="hotel-score-bar">
+            <span class="hotel-progress" id="ht-progress">🏨 1 / 8</span>
+            <span class="hotel-correct" id="ht-correct">✅ 0</span>
+            <span class="hotel-errors" id="ht-errors">❌ 0</span>
+          </div>
+
+          <div class="hotel-situation-box">
+            <div class="hotel-situation" id="ht-situation">
+              <span class="hotel-client-emoji" id="ht-emoji"></span>
+              <span class="hotel-client-says" id="ht-says"></span>
+              <span class="hotel-counter" id="ht-counter"></span>
+            </div>
+          </div>
+
+          <div class="hotel-who">👆 Qui doit s'en occuper ?</div>
+          
+          <div class="hotel-explain" id="ht-explain"></div>
+          
+          <div class="hotel-pros" id="ht-pros"></div>
+          
+          <p class="hotel-hint">Après le jeu, demande à l'intervenant son quotidien dans chacun de ces postes !</p>
+        </div>
+
+        <div class="result-container-full hidden" id="result">
+          <div class="result-box" id="result-box">
+            <div class="result-icon" id="result-icon"></div>
+            <h3 id="result-title"></h3>
+            <p id="result-text"></p>
+            <p class="result-score" id="result-score"></p>
+            <a href="coffre.html" class="btn-primary btn-gold">🏆 VOIR LE LIVRE DE RECETTES</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <script src="js/loader.js"></script>
+  <script src="js/gameState.js"></script>
+  <script src="js/globalTimer.js"></script>
+  <script src="js/enigme.js"></script>
+  <script src="js/music.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</body>
+</html>

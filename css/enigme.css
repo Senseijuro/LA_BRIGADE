@@ -1,0 +1,77 @@
+/* =================================================================
+   ÉPREUVE 3 — PROBLÈME À L'HÔTEL
+   ================================================================= */
+.hotel-game { padding: 1rem 0; }
+
+.hotel-score-bar {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 0.75rem 1rem; background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border); border-radius: 10px; margin-bottom: 1rem; font-size: 0.9rem;
+}
+
+.hotel-progress { color: var(--cyan); font-weight: 600; }
+.hotel-correct { color: var(--green); font-weight: 600; }
+.hotel-errors { color: var(--red); font-weight: 600; }
+
+.hotel-situation-box { max-width: 480px; margin: 0 auto 1.5rem; }
+.hotel-situation {
+  background: var(--bg-card); border: 2px solid var(--pink); border-radius: 20px;
+  padding: 1.5rem; text-align: center; box-shadow: 0 10px 30px rgba(255, 0, 127, 0.15);
+}
+
+.hotel-client-emoji { font-size: 3rem; margin-bottom: 0.8rem; display: block; }
+.hotel-client-says { font-size: 0.95rem; color: var(--white); line-height: 1.6; font-style: italic; }
+.hotel-client-says::before { content: '"'; font-size: 1.5rem; color: var(--pink); margin-right: 0.3rem; }
+.hotel-client-says::after { content: '"'; font-size: 1.5rem; color: var(--pink); margin-left: 0.3rem; }
+.hotel-counter { display: block; margin-top: 0.8rem; font-size: 0.7rem; color: var(--gray); }
+
+.hotel-slide-in { animation: hotelSlide 0.35s ease; }
+@keyframes hotelSlide {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.hotel-who { text-align: center; font-size: 0.85rem; color: var(--gray-light); margin-bottom: 1rem; font-weight: 600; }
+
+.hotel-pros { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; max-width: 480px; margin: 0 auto 1rem; }
+
+.hotel-pro {
+  display: flex; flex-direction: column; align-items: center; gap: 0.4rem; padding: 1rem 0.5rem;
+  background: rgba(255, 255, 255, 0.03); border: 2px solid var(--border);
+  border-radius: 14px; cursor: pointer; transition: all 0.3s; text-align: center;
+}
+.hotel-pro:hover { border-color: var(--cyan); background: rgba(0, 212, 255, 0.05); transform: translateY(-3px); }
+.hotel-pro-emoji { font-size: 2rem; }
+.hotel-pro-name { font-size: 0.75rem; color: var(--white); font-weight: 600; }
+.hotel-pro-role { font-size: 0.6rem; color: var(--gray); }
+
+.hotel-pro.correct-pick { border-color: var(--green); background: rgba(0, 255, 136, 0.1); pointer-events: none; }
+.hotel-pro.correct-pick .hotel-pro-name { color: var(--green); }
+.hotel-pro.wrong-pick { border-color: var(--red); background: rgba(255, 68, 68, 0.1); pointer-events: none; opacity: 0.4; }
+.hotel-pro.disabled { pointer-events: none; opacity: 0.5; }
+.hotel-pro.reveal { border-color: var(--green); background: rgba(0, 255, 136, 0.08); }
+
+.hotel-explain {
+  text-align: center; min-height: 2.5rem; font-size: 0.85rem;
+  font-weight: 600; margin-bottom: 0.5rem; padding: 0 1rem; line-height: 1.5;
+}
+.hotel-explain.good { color: var(--green); }
+.hotel-explain.bad { color: var(--red); }
+
+.hotel-hint { text-align: center; color: var(--gray); font-size: 0.8rem; }
+
+@media (max-width: 450px) {
+  .hotel-pros { grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+  .hotel-situation { padding: 1.2rem; }
+  .hotel-client-says { font-size: 0.85rem; }
+}
+
+/* =================================================================
+   🔍 BOOSTER DE TAILLE DE TEXTE (MODE ÉQUILIBRÉ)
+   ================================================================= */
+.hotel-score-bar { font-size: 1.05rem !important; }
+.hotel-client-says { font-size: 1.15rem !important; }
+.hotel-who { font-size: 1.1rem !important; }
+.hotel-pro-name { font-size: 0.95rem !important; }
+.hotel-pro-role { font-size: 0.85rem !important; }
+.hotel-hint { font-size: 0.95rem !important; }

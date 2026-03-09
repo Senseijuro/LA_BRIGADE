@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Épreuve 1 - La Brigade du Chef</title>
+  
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/enigme1.css">
+  <link rel="icon" type="image/jpeg" href="img/favicon.jpeg">
+  
+  <audio id="bg-music" loop>
+    <source src="audio/enigme_ost.mp3" type="audio/mpeg">
+  </audio>
+</head>
+<body>
+
+  <div class="page-loader" id="page-loader">
+    <div class="loader-content">
+      <div class="loader-logo">
+        <div class="loader-symbols">
+          <span class="loader-symbol circle"></span>
+          <span class="loader-symbol triangle"></span>
+          <span class="loader-symbol square"></span>
+        </div>
+      </div>
+      <div class="loader-text">ÉPREUVE 1 — LA BRIGADE</div>
+      <div class="loader-bar">
+        <div class="loader-progress"></div>
+      </div>
+      <div class="loader-status">Appel de la brigade...</div>
+    </div>
+  </div>
+
+  <header class="header">
+    <a href="index.html" class="back-btn" id="back-btn">← Retour</a>
+    <div class="header-center">
+      <span class="page-badge">ÉPREUVE 1</span>
+    </div>
+    <div class="header-right"></div>
+  </header>
+
+  <main class="game-page">
+    <div class="game-container game-container-wide">
+      
+      <div class="game-header">
+        <div class="game-icon-large">👨‍🍳</div>
+        <h1 class="purple">LA BRIGADE DU CHEF</h1>
+        <p>Chaque poste a un rôle précis en cuisine — trouve la bonne description !</p>
+      </div>
+
+      <div class="game-content">
+        
+        <div id="game-area" class="brigade-game">
+          
+          <div class="brigade-score-bar">
+            <span class="brigade-progress" id="bg-progress">👨‍🍳 1 / 8</span>
+            <span class="brigade-correct" id="bg-correct">✅ 0</span>
+            <span class="brigade-errors" id="bg-errors">❌ 0</span>
+          </div>
+
+          <div class="brigade-role-box">
+            <div class="brigade-role-card" id="bg-role-card">
+              <span class="brigade-role-emoji" id="bg-emoji"></span>
+              <span class="brigade-role-title" id="bg-title"></span>
+              <span class="brigade-role-sub" id="bg-sub"></span>
+            </div>
+          </div>
+
+          <div class="brigade-explain" id="bg-explain"></div>
+          
+          <div class="brigade-choices" id="bg-choices"></div>
+          
+          <p class="brigade-hint">Après le jeu, demande à l'intervenant comment ça se passe vraiment dans sa brigade !</p>
+        </div>
+
+        <div class="result-container-full hidden" id="result">
+          <div class="result-box" id="result-box">
+            <div class="result-icon" id="result-icon"></div>
+            <h3 id="result-title"></h3>
+            <p id="result-text"></p>
+            <p class="result-score" id="result-score"></p>
+            <a href="quiz.html" class="btn-primary">CONTINUER →</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <script src="js/loader.js"></script>
+  <script src="js/gameState.js"></script>
+  <script src="js/globalTimer.js"></script>
+  <script src="js/enigme1.js"></script>
+  <script src="js/music.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</body>
+</html>

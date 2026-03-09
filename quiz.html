@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Épreuve 2 - Dresse la Table</title>
+  
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/quiz.css">
+  <link rel="icon" type="image/jpeg" href="img/favicon.jpeg">
+  
+  <audio id="bg-music" loop>
+    <source src="audio/quizz_ost.mp3" type="audio/mpeg">
+  </audio>
+</head>
+<body>
+
+  <div class="page-loader" id="page-loader">
+    <div class="loader-content">
+      <div class="loader-logo">
+        <div class="loader-symbols">
+          <span class="loader-symbol circle"></span>
+          <span class="loader-symbol triangle"></span>
+          <span class="loader-symbol square"></span>
+        </div>
+      </div>
+      <div class="loader-text">ÉPREUVE 2 — DRESSE LA TABLE</div>
+      <div class="loader-bar">
+        <div class="loader-progress"></div>
+      </div>
+      <div class="loader-status">Préparation de la salle...</div>
+    </div>
+  </div>
+
+  <header class="header">
+    <a href="index.html" class="back-btn" id="back-btn">← Retour</a>
+    <div class="header-center">
+      <span class="page-badge">ÉPREUVE 2</span>
+    </div>
+    <div class="header-right"></div>
+  </header>
+
+  <main class="game-page">
+    <div class="game-container game-container-wide">
+      
+      <div class="game-header">
+        <div class="game-icon-large">🍽️</div>
+        <h1 class="cyan">DRESSE LA TABLE</h1>
+        <p>Mémorise le dressage parfait, puis retrouve-le parmi les imposteurs !</p>
+      </div>
+
+      <div class="game-content">
+        
+        <div class="locked-container hidden" id="locked">
+          <div class="locked-box">
+            <span class="lock-icon">🔒</span>
+            <h3>Épreuve verrouillée</h3>
+            <p>Termine d'abord l'épreuve 1 pour débloquer celle-ci.</p>
+            <a href="enigme1.html" class="btn-primary">ALLER À L'ÉPREUVE 1</a>
+          </div>
+        </div>
+
+        <div id="game-area" class="table-game">
+          
+          <div class="table-score-bar">
+            <span class="table-round" id="tg-round">🍽️ Table 1 / 5</span>
+            <span class="table-correct" id="tg-correct">✅ 0</span>
+            <span class="table-errors" id="tg-errors">❌ 0</span>
+          </div>
+
+          <div class="table-phase-msg memo" id="tg-phase">👁️ MÉMORISE CE DRESSAGE...</div>
+
+          <div id="tg-ref-zone">
+            <div class="table-reference" id="tg-reference"></div>
+            <div class="table-timer-bar">
+              <span class="table-timer-text" id="tg-timer">4</span>
+              <span class="table-timer-sub">secondes pour mémoriser</span>
+            </div>
+          </div>
+
+          <div id="tg-pick-zone" style="display:none;">
+            <div class="table-options" id="tg-options"></div>
+          </div>
+
+          <p class="table-hint" id="tg-hint">Observe bien la position de chaque élément !</p>
+        </div>
+
+        <div class="result-container-full hidden" id="result">
+          <div class="result-box" id="result-box">
+            <div class="result-icon" id="result-icon"></div>
+            <h3 id="result-title"></h3>
+            <p id="result-text"></p>
+            <p class="result-score" id="result-score"></p>
+            <a href="enigme.html" class="btn-primary">CONTINUER →</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <script src="js/loader.js"></script>
+  <script src="js/gameState.js"></script>
+  <script src="js/globalTimer.js"></script>
+  <script src="js/quiz.js"></script>
+  <script src="js/music.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</body>
+</html>

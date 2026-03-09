@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Livre de Recettes - Récompenses</title>
+  
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" type="image/jpeg" href="img/favicon.jpeg">
+  
+  <audio id="bg-music" loop>
+    <source src="audio/coffre_win.mp3" type="audio/mpeg">
+  </audio>
+</head>
+<body>
+
+  <div class="page-loader" id="page-loader">
+    <div class="loader-content">
+      <div class="loader-logo">
+        <div class="loader-symbols">
+          <span class="loader-symbol circle"></span>
+          <span class="loader-symbol triangle"></span>
+          <span class="loader-symbol square"></span>
+        </div>
+      </div>
+      <div class="loader-text">LIVRE DE RECETTES</div>
+      <div class="loader-bar">
+        <div class="loader-progress"></div>
+      </div>
+      <div class="loader-status">Ouverture du livre...</div>
+    </div>
+  </div>
+
+  <header class="header">
+    <a href="#" class="back-btn" id="back-btn">Retour</a>
+    <div class="header-center">
+      <span class="page-badge gold">LIVRE DE RECETTES</span>
+    </div>
+    <div class="header-right"></div>
+  </header>
+
+  <main class="game-page">
+    <div class="game-container">
+      
+      <div class="game-header">
+        <div class="game-icon-large">🏆</div>
+        <h1 class="gold">LIVRE DE RECETTES</h1>
+        <p>Récupérez vos étoiles débloquées</p>
+      </div>
+
+      <div class="game-content">
+        
+        <div class="coffre-progress">
+          <div class="progress-item" id="prog-enigme1">
+            <div class="progress-circle">1</div>
+            <span>Brigade</span>
+          </div>
+          <div class="progress-line"></div>
+          <div class="progress-item" id="prog-quiz">
+            <div class="progress-circle">2</div>
+            <span>Table</span>
+          </div>
+          <div class="progress-line"></div>
+          <div class="progress-item" id="prog-enigma">
+            <div class="progress-circle">3</div>
+            <span>Hôtel</span>
+          </div>
+        </div>
+
+        <div class="rewards-list">
+          <div class="reward-card" id="reward-enigme1" data-game="enigme1">
+            <div class="reward-icon">⭐</div>
+            <div class="reward-info">
+              <h3>Étoile n°1</h3>
+              <span class="reward-link">Épreuve 1 - La Brigade du Chef</span>
+            </div>
+            <div class="reward-status" id="status-enigme1">Verrouillé</div>
+          </div>
+
+          <div class="reward-card" id="reward-quiz" data-game="quiz">
+            <div class="reward-icon">⭐</div>
+            <div class="reward-info">
+              <h3>Étoile n°2</h3>
+              <span class="reward-link">Épreuve 2 - Dresse la Table</span>
+            </div>
+            <div class="reward-status" id="status-quiz">Verrouillé</div>
+          </div>
+
+          <div class="reward-card" id="reward-enigma" data-game="enigma">
+            <div class="reward-icon">⭐</div>
+            <div class="reward-info">
+              <h3>Étoile n°3</h3>
+              <span class="reward-link">Épreuve 3 - Problème à l'Hôtel</span>
+            </div>
+            <div class="reward-status" id="status-enigma">Verrouillé</div>
+          </div>
+        </div>
+
+        <div class="next-zone-box hidden" id="next-zone">
+          <div class="next-zone-content">
+            <span class="next-zone-icon" id="next-zone-icon">🎉</span>
+            <h3 id="next-zone-title">ÉPREUVES TERMINÉES</h3>
+            <p id="next-zone-text">Résultat</p>
+            <div class="next-zone-direction">
+              <span class="direction-icon">➡️</span>
+              <div class="direction-info">
+                <strong>PROCHAINE ÉTAPE</strong>
+                <p>Rendez-vous à la <span class="zone-name">ZONE ESTHÉTIQUE</span></p>
+              </div>
+            </div>
+            <p class="next-zone-instruction">Présentez-vous au stand pour continuer l'aventure !</p>
+          </div>
+        </div>
+
+        <button class="btn-reset" id="btn-reset">Recommencer le jeu</button>
+
+      </div>
+    </div>
+  </main>
+
+  <div class="modal" id="modal-success">
+    <div class="modal-content success">
+      <div class="modal-icon">OK</div>
+      <h3>ÉTOILE DÉBLOQUÉE !</h3>
+      <p>Signalez au maître du jeu.<br>Vous pouvez recevoir vos prix.</p>
+      <button class="btn-primary" id="btn-close-success">CONTINUER</button>
+    </div>
+  </div>
+
+  <div class="modal" id="modal-fail">
+    <div class="modal-content fail">
+      <div class="modal-icon">X</div>
+      <h3>ÉTOILE VERROUILLÉE</h3>
+      <p id="fail-message">Vous devez réussir l'épreuve pour débloquer cette étoile.</p>
+      <button class="btn-primary" id="btn-close-fail">COMPRIS</button>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <p>© 2026 Maître du Jeu Khouyousse — Destination Apprentissage</p>
+  </footer>
+
+  <script src="js/loader.js"></script>
+  <script src="js/gameState.js"></script>
+  <script src="js/globalTimer.js"></script>
+  <script src="js/coffre.js"></script>
+  <script src="js/music.js"></script>
+</body>
+</html>
