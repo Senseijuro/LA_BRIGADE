@@ -141,11 +141,11 @@ document.addEventListener('DOMContentLoaded', function() {
     var musicSrc = '';
     
     if (successCount === 3) {
-      musicSrc = 'coffre_win.mp3';
+      musicSrc = 'audio/coffre_win.mp3';
     } else if (successCount >= 1) {
-      musicSrc = 'coffre_partial.mp3';
+      musicSrc = 'audio/coffre_partial.mp3';
     } else {
-      musicSrc = 'coffre_fail.mp3';
+      musicSrc = 'audio/coffre_fail.mp3';
     }
 
     // Mettre à jour la source et jouer
