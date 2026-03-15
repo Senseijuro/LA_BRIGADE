@@ -14,13 +14,11 @@ document.addEventListener('DOMContentLoaded', function() {
   var timerEl = document.getElementById('tg-timer');
   var hintEl = document.getElementById('tg-hint');
 
-  // 1. BYPASS
   if (!state.enigme1 || state.enigme1.completed === null) {
     if (locked) locked.classList.remove('hidden');
     if (gameArea) gameArea.classList.add('hidden');
     return;
   }
-
   if (state.quiz && state.quiz.completed !== null) {
     if (gameArea) gameArea.classList.add('hidden');
     if (locked) locked.classList.add('hidden');
@@ -29,11 +27,8 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   if (locked) locked.classList.add('hidden');
-
-  // 2. CACHER LE JEU AU DÉMARRAGE
   if (gameArea) gameArea.classList.add('hidden');
 
-  // 3. AFFICHER LE TUTORIEL
   Tutorial.show({
     icon: '🍽️',
     title: 'DRESSAGE DE TABLE',
@@ -53,50 +48,13 @@ document.addEventListener('DOMContentLoaded', function() {
     initGame();
   });
 
-  // 4. LOGIQUE DU JEU
   function initGame() {
-    // Chaque dressage = grille 2x3 [top-left, top-center, top-right, bot-left, bot-center, bot-right]
     var rounds = [
-      {
-        name: 'Table simple', timer: 4, correct: ['', '', '🥂', '🍴', '🍽️', '🔪'],
-        wrongs: [
-          ['', '', '🥂', '🔪', '🍽️', '🍴'],  // couteau/fourchette inversés
-          ['', '', '🍴', '🥂', '🍽️', '🔪'],  // verre/fourchette inversés
-          ['', '🥂', '', '🍴', '🍽️', '🔪']   // verre mauvais côté
-        ]
-      },
-      {
-        name: 'Table avec pain', timer: 4, correct: ['🍞', '', '🥂', '🍴', '🍽️', '🔪'],
-        wrongs: [
-          ['', '', '🥂', '🍴', '🍽️', '🔪'],  // pain manquant
-          ['🥂', '', '🍞', '🍴', '🍽️', '🔪'],  // pain/verre inversés
-          ['🍞', '', '🥂', '🔪', '🍽️', '🍴']   // couteau/fourchette inversés
-        ]
-      },
-      {
-        name: 'Table complète', timer: 3, correct: ['🍞', '🥄', '🥂', '🍴', '🍽️', '🔪'],
-        wrongs: [
-          ['🍞', '🥄', '🥂', '🔪', '🍽️', '🍴'],  // fourchette/couteau
-          ['🍞', '🥂', '🥄', '🍴', '🍽️', '🔪'],  // cuillère/verre
-          ['🥂', '🥄', '🍞', '🍴', '🍽️', '🔪']   // pain/verre
-        ]
-      },
-      {
-        name: 'Grand service', timer: 3, correct: ['🍞', '🥄', '🥂', '🍴', '🍽️', '🔪'],
-        wrongs: [
-          ['🍞', '🥄', '🥂', '🍴', '🔪', '🍽️'],  // assiette/couteau
-          ['🍞', '🔪', '🥂', '🍴', '🍽️', '🥄'],  // cuillère/couteau
-          ['🥄', '🍞', '🥂', '🍴', '🍽️', '🔪']   // pain/cuillère
-        ]
-      },
-      {
-        name: 'Service étoilé', timer: 2, correct: ['🍞', '🥄', '🥂', '🍴', '🍽️', '🔪'],
-        wrongs: [
-          ['🍞', '🥄', '🥂', '🍽️', '🍴', '🔪'],  // fourchette/assiette (subtil)
-          ['🍞', '🥄', '🥂', '🍴', '🍽️', '🥂'],  // double verre, pas de couteau
-          ['🍴', '🥄', '🥂', '🍞', '🍽️', '🔪']   // pain/fourchette
-        ]
-      }
+      { name: 'Table simple', timer: 4, correct: ['', '', '🥂', '🍴', '🍽️', '🔪'], wrongs: [['', '', '🥂', '🔪', '🍽️', '🍴'], ['', '', '🍴', '🥂', '🍽️', '🔪'], ['', '🥂', '', '🍴', '🍽️', '🔪']] },
+      { name: 'Table avec pain', timer: 4, correct: ['🍞', '', '🥂', '🍴', '🍽️', '🔪'], wrongs: [['', '', '🥂', '🍴', '🍽️', '🔪'], ['🥂', '', '🍞', '🍴', '🍽️', '🔪'], ['🍞', '', '🥂', '🔪', '🍽️', '🍴']] },
+      { name: 'Table complète', timer: 3, correct: ['🍞', '🥄', '🥂', '🍴', '🍽️', '🔪'], wrongs: [['🍞', '🥄', '🥂', '🔪', '🍽️', '🍴'], ['🍞', '🥂', '🥄', '🍴', '🍽️', '🔪'], ['🥂', '🥄', '🍞', '🍴', '🍽️', '🔪']] },
+      { name: 'Grand service', timer: 3, correct: ['🍞', '🥄', '🥂', '🍴', '🍽️', '🔪'], wrongs: [['🍞', '🥄', '🥂', '🍴', '🔪', '🍽️'], ['🍞', '🔪', '🥂', '🍴', '🍽️', '🥄'], ['🥄', '🍞', '🥂', '🍴', '🍽️', '🔪']] },
+      { name: 'Service étoilé', timer: 2, correct: ['🍞', '🥄', '🥂', '🍴', '🍽️', '🔪'], wrongs: [['🍞', '🥄', '🥂', '🍽️', '🍴', '🔪'], ['🍞', '🥄', '🥂', '🍴', '🍽️', '🥂'], ['🍴', '🥄', '🥂', '🍞', '🍽️', '🔪']] }
     ];
 
     var currentRound = 0;
@@ -112,45 +70,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function renderSetting(container, grid, label) {
       container.innerHTML = '';
-      if (label) {
-        var lbl = document.createElement('span');
-        lbl.className = 'table-ref-label';
-        lbl.textContent = label;
-        container.appendChild(lbl);
-      }
-      var row1 = document.createElement('div');
-      row1.className = 'table-setting-row';
-      for (var i = 0; i < 3; i++) {
-        var cell = document.createElement('div');
-        cell.className = 'table-cell' + (grid[i] ? '' : ' empty');
-        cell.textContent = grid[i] || '·';
-        row1.appendChild(cell);
-      }
+      if (label) { var lbl = document.createElement('span'); lbl.className = 'table-ref-label'; lbl.textContent = label; container.appendChild(lbl); }
+      var row1 = document.createElement('div'); row1.className = 'table-setting-row';
+      for (var i = 0; i < 3; i++) { var cell = document.createElement('div'); cell.className = 'table-cell' + (grid[i] ? '' : ' empty'); cell.textContent = grid[i] || '·'; row1.appendChild(cell); }
       container.appendChild(row1);
-      
-      var row2 = document.createElement('div');
-      row2.className = 'table-setting-row';
-      for (var i = 3; i < 6; i++) {
-        var cell = document.createElement('div');
-        cell.className = 'table-cell' + (grid[i] ? '' : ' empty');
-        cell.textContent = grid[i] || '·';
-        row2.appendChild(cell);
-      }
+      var row2 = document.createElement('div'); row2.className = 'table-setting-row';
+      for (var j = 3; j < 6; j++) { var cell2 = document.createElement('div'); cell2.className = 'table-cell' + (grid[j] ? '' : ' empty'); cell2.textContent = grid[j] || '·'; row2.appendChild(cell2); }
       container.appendChild(row2);
     }
 
     function shuffle(arr) {
       var a = arr.slice();
-      for (var i = a.length - 1; i > 0; i--) {
-        var j = Math.floor(Math.random() * (i + 1));
-        var t = a[i]; a[i] = a[j]; a[j] = t;
-      }
+      for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; }
       return a;
     }
 
     function startRound() {
       if (currentRound >= total) { endGame(); return; }
-
       var round = rounds[currentRound];
       updateStats();
 
@@ -167,10 +103,7 @@ document.addEventListener('DOMContentLoaded', function() {
       var countInterval = setInterval(function() {
         countdown--;
         if (timerEl) timerEl.textContent = countdown;
-        if (countdown <= 0) {
-          clearInterval(countInterval);
-          startPickPhase(round);
-        }
+        if (countdown <= 0) { clearInterval(countInterval); startPickPhase(round); }
       }, 1000);
     }
 
@@ -187,18 +120,20 @@ document.addEventListener('DOMContentLoaded', function() {
       options.innerHTML = '';
       var labels = ['A', 'B', 'C', 'D'];
 
+      // --- AJOUT ANTI-STICKY HOVER JS ---
+      options.style.pointerEvents = 'none';
+      setTimeout(function() { options.style.pointerEvents = 'auto'; }, 150);
+      // ----------------------------------
+
       allOptions.forEach(function(opt, i) {
         var el = document.createElement('div');
         el.className = 'table-option';
         el.dataset.correct = opt.isCorrect;
-
         var labelSpan = document.createElement('span');
         labelSpan.className = 'table-option-label';
         labelSpan.textContent = 'TABLE ' + labels[i];
         el.appendChild(labelSpan);
-
         renderSetting(el, opt.grid);
-
         el.addEventListener('click', function() { handlePick(el, opt.isCorrect); });
         options.appendChild(el);
       });
@@ -208,24 +143,14 @@ document.addEventListener('DOMContentLoaded', function() {
       var allOpts = options.querySelectorAll('.table-option');
       allOpts.forEach(function(o) { o.classList.add('disabled'); });
 
-      if (isCorrect) {
-        el.classList.add('correct-pick');
-        el.classList.remove('disabled');
-        correctCount++;
-      } else {
-        el.classList.add('wrong-pick');
-        el.classList.remove('disabled');
-        errorCount++;
-        allOpts.forEach(function(o) {
-          if (o.dataset.correct === 'true') { o.classList.add('correct-pick'); o.classList.remove('disabled'); }
-        });
+      if (isCorrect) { el.classList.add('correct-pick'); el.classList.remove('disabled'); correctCount++; }
+      else {
+        el.classList.add('wrong-pick'); el.classList.remove('disabled'); errorCount++;
+        allOpts.forEach(function(o) { if (o.dataset.correct === 'true') { o.classList.add('correct-pick'); o.classList.remove('disabled'); } });
       }
 
       updateStats();
-      setTimeout(function() {
-        currentRound++;
-        startRound();
-      }, 1200);
+      setTimeout(function() { currentRound++; startRound(); }, 1200);
     }
 
     function endGame() {
@@ -234,18 +159,13 @@ document.addEventListener('DOMContentLoaded', function() {
       state.quiz.completed = success;
       state.quiz.score = correctCount;
       saveGameState(state);
-
-      setTimeout(function() {
-        if (gameArea) gameArea.classList.add('hidden');
-        showResult(success, correctCount);
-      }, 400);
+      setTimeout(function() { if (gameArea) gameArea.classList.add('hidden'); showResult(success, correctCount); }, 400);
     }
 
     updateStats();
     setTimeout(function() { startRound(); }, 600);
   }
 
-  // 5. FONCTION SHOWRESULT HORS DE INITGAME
   function showResult(success, score) {
     if (resultDiv) resultDiv.classList.remove('hidden');
     if (gameArea) gameArea.classList.add('hidden');
@@ -262,29 +182,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (success) {
       if (navigator.vibrate) navigator.vibrate([100, 50, 100]); 
-      if (window.confetti) {
-        confetti({ 
-          particleCount: 150, spread: 80, origin: { y: 0.6 },
-          colors: ['#ff007f', '#00d4ff', '#ffd700', '#a855f7'], 
-          disableForReducedMotion: true
-        });
-      }
-
-      if (resultBox) {
-        resultBox.classList.remove('success-effect'); 
-        void resultBox.offsetWidth; 
-        resultBox.classList.add('success-effect', 'success');
-      }
+      if (window.confetti) { confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 }, colors: ['#ff007f', '#00d4ff', '#ffd700', '#a855f7'], disableForReducedMotion: true }); }
+      if (resultBox) { resultBox.classList.remove('success-effect'); void resultBox.offsetWidth; resultBox.classList.add('success-effect', 'success'); }
       if (resultIcon) resultIcon.textContent = '✓';
       if (resultTitle) resultTitle.textContent = 'TABLE PARFAITE !';
       if (resultText) resultText.textContent = 'Tu as l\'œil d\'un maître d\'hôtel. Étoile débloquée !';
     } else {
       if (navigator.vibrate) navigator.vibrate([50, 100, 50, 100, 50]); 
-      if (resultBox) {
-        resultBox.classList.remove('fail-effect'); 
-        void resultBox.offsetWidth; 
-        resultBox.classList.add('fail-effect', 'fail');
-      }
+      if (resultBox) { resultBox.classList.remove('fail-effect'); void resultBox.offsetWidth; resultBox.classList.add('fail-effect', 'fail'); }
       if (resultIcon) resultIcon.textContent = '✗';
       if (resultTitle) resultTitle.textContent = 'DRESSAGE INCORRECT';
       if (resultText) resultText.textContent = 'Il fallait reconnaître au moins 4 dressages sur 5. Étoile verrouillée.';
