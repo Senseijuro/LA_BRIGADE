@@ -18,31 +18,32 @@
 .brigade-role-card {
   display: inline-block; padding: 1.5rem 2.5rem;
   background: rgba(255, 107, 53, 0.08); border: 2px solid rgba(255, 107, 53, 0.4);
-  border-radius: 20px; box-shadow: 0 10px 30px rgba(255, 107, 53, 0.1);
-  transition: all 0.3s;
+  border-radius: 20px; box-shadow: 0 10px 30px rgba(255, 107, 53, 0.15);
 }
-.brigade-slide-in { animation: brigadeSlide 0.4s ease; }
-@keyframes brigadeSlide { from { opacity: 0; transform: translateY(20px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
 
-.brigade-emoji { font-size: 4rem; margin-bottom: 0.5rem; display: block; }
-.brigade-title { font-size: 1.2rem; font-weight: 800; color: var(--white); margin-bottom: 0.2rem; letter-spacing: 0.05em; }
-.brigade-sub { font-size: 0.85rem; color: var(--gray); font-style: italic; }
+.brigade-role-emoji { font-size: 3rem; display: block; margin-bottom: 0.5rem; }
+.brigade-role-title { font-size: 1.3rem; font-weight: 800; color: #ff6b35; }
+.brigade-role-sub { font-size: 0.75rem; color: var(--gray); margin-top: 0.3rem; display: block; }
 
-.brigade-choices { display: flex; flex-direction: column; gap: 0.6rem; max-width: 480px; margin: 0 auto 1.5rem; }
+.brigade-slide-in { animation: brigSlide 0.35s ease; }
+@keyframes brigSlide {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.brigade-choices {
+  display: flex; flex-direction: column; gap: 0.6rem;
+  max-width: 460px; margin: 0 auto 1rem;
+}
+
 .brigade-choice {
-  background: var(--bg-card); border: 2px solid var(--border); border-radius: 14px;
-  padding: 1rem 1.2rem; color: var(--white); font-size: 0.95rem; font-weight: 600;
-  text-align: left; cursor: pointer; transition: all 0.2s; line-height: 1.4;
-  display: flex; align-items: center; min-height: 65px;
+  padding: 1rem 1.2rem; background: rgba(255, 255, 255, 0.03);
+  border: 2px solid var(--border); border-radius: 14px; cursor: pointer;
+  transition: all 0.3s; text-align: left; color: var(--gray-light); font-size: 0.9rem; line-height: 1.5;
 }
 
-/* --- ANTI-STICKY HOVER CSS --- */
-@media (hover: hover) and (pointer: fine) {
-  .brigade-choice:hover { border-color: var(--gold); background: rgba(255, 215, 0, 0.1); transform: scale(1.03); }
-}
-
-.brigade-choice:active { transform: scale(0.98); }
-.brigade-choice.correct-pick { border-color: var(--green); background: rgba(0, 255, 136, 0.1); pointer-events: none; }
+.brigade-choice:hover { border-color: var(--cyan); background: rgba(0, 212, 255, 0.05); transform: translateX(5px); }
+.brigade-choice.correct-pick { border-color: var(--green); background: rgba(0, 255, 136, 0.1); pointer-events: none; color: var(--green); }
 .brigade-choice.wrong-pick { border-color: var(--red); background: rgba(255, 68, 68, 0.1); pointer-events: none; opacity: 0.5; }
 .brigade-choice.disabled { pointer-events: none; opacity: 0.5; }
 .brigade-choice.reveal { border-color: var(--green); background: rgba(0, 255, 136, 0.08); }
@@ -66,7 +67,16 @@
 
 @media (max-width: 450px) {
   .brigade-role-card { padding: 1rem 1.5rem; }
-  .brigade-emoji { font-size: 3rem; }
-  .brigade-title { font-size: 1.1rem; }
-  .brigade-choice { font-size: 0.85rem; padding: 0.8rem 1rem; min-height: 55px; }
+  .brigade-role-emoji { font-size: 2.5rem; }
+  .brigade-role-title { font-size: 1.1rem; }
+  .brigade-choice { padding: 0.8rem 1rem; font-size: 0.85rem; }
 }
+
+/* =================================================================
+   🔍 BOOSTER DE TAILLE DE TEXTE (MODE ÉQUILIBRÉ)
+   ================================================================= */
+.brigade-score-bar { font-size: 1.05rem !important; }
+.brigade-role-title { font-size: 1.5rem !important; }
+.brigade-role-sub { font-size: 0.95rem !important; }
+.brigade-choice { font-size: 1.05rem !important; }
+.brigade-hint { font-size: 0.95rem !important; }

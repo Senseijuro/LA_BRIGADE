@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
   var correctEl = document.getElementById('ht-correct');
   var errorsEl = document.getElementById('ht-errors');
 
+  // 1. BYPASS
   if (!state.quiz || state.quiz.completed === null) {
     if (locked) locked.classList.remove('hidden');
     if (gameArea) gameArea.classList.add('hidden');
@@ -25,8 +26,11 @@ document.addEventListener('DOMContentLoaded', function() {
     return;
   }
   if (locked) locked.classList.add('hidden');
+
+  // 2. CACHER LE JEU AU DÉMARRAGE
   if (gameArea) gameArea.classList.add('hidden');
 
+  // 3. TUTORIEL
   Tutorial.show({
     icon: '🛎️',
     title: 'HÔTEL 5 ÉTOILES',
@@ -45,6 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initGame();
   });
 
+  // 4. LOGIQUE DU JEU
   function initGame() {
     var allPros = [
       { emoji: '🛎️', name: 'Réceptionniste', role: 'Accueil & réservations' },
@@ -56,21 +61,53 @@ document.addEventListener('DOMContentLoaded', function() {
     ];
 
     var situations = [
-      { emoji: '😰', says: 'Bonjour, j\'arrive de l\'aéroport. J\'ai réservé une chambre au nom de Dupont, est-ce que tout est prêt ?', correctPro: 'Réceptionniste', explain: 'Le réceptionniste gère l\'arrivée (check-in), vérifie la réservation et donne la clé de chambre.' },
-      { emoji: '😡', says: 'Il y a de l\'eau qui coule du plafond dans ma chambre ! C\'est inacceptable !', correctPro: 'Agent technique', explain: 'L\'agent technique (ou agent de maintenance) intervient pour les pannes, fuites et réparations.' },
-      { emoji: '😊', says: 'Je voudrais un petit-déjeuner en chambre demain matin à 7h30, c\'est possible ?', correctPro: 'Room Service', explain: 'Le room service prépare et livre les repas directement en chambre — petit-déjeuner, déjeuner ou dîner.' },
-      { emoji: '🤔', says: 'Pouvez-vous me réserver un taxi pour aller au musée du Louvre et me recommander un restaurant ?', correctPro: 'Concierge', explain: 'Le concierge est l\'expert local : réservations, recommandations, billets de spectacle, transport...' },
-      { emoji: '😤', says: 'Les serviettes n\'ont pas été changées et le lit n\'est pas fait. Ma chambre n\'a pas été nettoyée !', correctPro: 'Femme de chambre', explain: 'La femme/le valet de chambre s\'occupe du ménage, du linge et de la présentation de chaque chambre.' },
-      { emoji: '😟', says: 'Je viens de perdre mon passeport dans l\'hôtel, je ne sais plus quoi faire...', correctPro: 'Réceptionniste', explain: 'La réception est le point central : objets trouvés, urgences, et coordination avec toute l\'équipe.' },
-      { emoji: '🤩', says: 'C\'est notre anniversaire de mariage ! Peut-on avoir un surclassement et du champagne en chambre ?', correctPro: 'Directeur d\'hôtel', explain: 'Le directeur prend les décisions commerciales : surclassements, gestes commerciaux, offres spéciales.' },
-      { emoji: '😴', says: 'La climatisation ne marche plus et il fait 35°C dans la chambre, je ne peux pas dormir !', correctPro: 'Agent technique', explain: 'Climatisation, chauffage, électricité — tout ce qui est technique passe par l\'agent de maintenance.' }
+      {
+        emoji: '😰', says: 'Bonjour, j\'arrive de l\'aéroport. J\'ai réservé une chambre au nom de Dupont, est-ce que tout est prêt ?',
+        correctPro: 'Réceptionniste',
+        explain: 'Le réceptionniste gère l\'arrivée (check-in), vérifie la réservation et donne la clé de chambre.'
+      },
+      {
+        emoji: '😡', says: 'Il y a de l\'eau qui coule du plafond dans ma chambre ! C\'est inacceptable !',
+        correctPro: 'Agent technique',
+        explain: 'L\'agent technique (ou agent de maintenance) intervient pour les pannes, fuites et réparations.'
+      },
+      {
+        emoji: '😊', says: 'Je voudrais un petit-déjeuner en chambre demain matin à 7h30, c\'est possible ?',
+        correctPro: 'Room Service',
+        explain: 'Le room service prépare et livre les repas directement en chambre — petit-déjeuner, déjeuner ou dîner.'
+      },
+      {
+        emoji: '🤔', says: 'Pouvez-vous me réserver un taxi pour aller au musée du Louvre et me recommander un restaurant ?',
+        correctPro: 'Concierge',
+        explain: 'Le concierge est l\'expert local : réservations, recommandations, billets de spectacle, transport...'
+      },
+      {
+        emoji: '😤', says: 'Les serviettes n\'ont pas été changées et le lit n\'est pas fait. Ma chambre n\'a pas été nettoyée !',
+        correctPro: 'Femme de chambre',
+        explain: 'La femme/le valet de chambre s\'occupe du ménage, du linge et de la présentation de chaque chambre.'
+      },
+      {
+        emoji: '😟', says: 'Je viens de perdre mon passeport dans l\'hôtel, je ne sais plus quoi faire...',
+        correctPro: 'Réceptionniste',
+        explain: 'La réception est le point central : objets trouvés, urgences, et coordination avec toute l\'équipe.'
+      },
+      {
+        emoji: '🤩', says: 'C\'est notre anniversaire de mariage ! Peut-on avoir un surclassement et du champagne en chambre ?',
+        correctPro: 'Directeur d\'hôtel',
+        explain: 'Le directeur prend les décisions commerciales : surclassements, gestes commerciaux, offres spéciales.'
+      },
+      {
+        emoji: '😴', says: 'La climatisation ne marche plus et il fait 35°C dans la chambre, je ne peux pas dormir !',
+        correctPro: 'Agent technique',
+        explain: 'Climatisation, chauffage, électricité — tout ce qui est technique passe par l\'agent de maintenance.'
+      }
     ];
 
     var order = getShuffledOrder('enigma', situations.length);
     var shuffled = order.map(function(i) { return situations[i]; }).slice(0, 5);
 
     var currentIndex = 0, correctCount = 0, errorCount = 0;
-    var total = shuffled.length;
+    var total = shuffled.length; // 5
     var isProcessing = false;
 
     function updateStats() {
@@ -100,11 +137,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
       prosEl.innerHTML = '';
       isProcessing = false;
-
-      // --- AJOUT ANTI-STICKY HOVER JS ---
-      prosEl.style.pointerEvents = 'none';
-      setTimeout(function() { prosEl.style.pointerEvents = 'auto'; }, 150);
-      // ----------------------------------
 
       options.forEach(function(pro) {
         var el = document.createElement('div');
@@ -145,7 +177,7 @@ document.addEventListener('DOMContentLoaded', function() {
       var success = correctCount >= 3;
       if (!state.enigma) state.enigma = { completed: null };
       state.enigma.completed = success;
-      state.enigma.score = correctCount;
+      state.enigma.score = correctCount; // Mémorise le score pour le bypass
       saveGameState(state);
       setTimeout(function() { if (gameArea) gameArea.classList.add('hidden'); showResult(success, correctCount); }, 400);
     }
@@ -154,6 +186,7 @@ document.addEventListener('DOMContentLoaded', function() {
     showSituation();
   }
 
+  // 5. FONCTION SHOWRESULT
   function showResult(success, score) {
     if (resultDiv) resultDiv.classList.remove('hidden');
     if (gameArea) gameArea.classList.add('hidden');
@@ -170,14 +203,30 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (success) {
       if (navigator.vibrate) navigator.vibrate([100, 50, 100]); 
-      if (window.confetti) { confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 }, colors: ['#ff007f', '#00d4ff', '#ffd700', '#a855f7'], disableForReducedMotion: true }); }
-      if (resultBox) { resultBox.classList.remove('success-effect'); void resultBox.offsetWidth; resultBox.classList.add('success-effect', 'success'); }
+      if (window.confetti) {
+        confetti({ 
+          particleCount: 150, spread: 80, origin: { y: 0.6 },
+          colors: ['#ff007f', '#00d4ff', '#ffd700', '#a855f7'], 
+          disableForReducedMotion: true
+        });
+      }
+
+      if (resultBox) {
+        resultBox.classList.remove('success-effect'); 
+        void resultBox.offsetWidth; 
+        resultBox.classList.add('success-effect', 'success');
+      }
       if (resultIcon) resultIcon.textContent = '✓';
       if (resultTitle) resultTitle.textContent = 'HÔTEL 5 ÉTOILES !';
       if (resultText) resultText.textContent = 'Tu sais qui fait quoi dans un hôtel ! Demande à l\'intervenant quel poste l\'intéresse le plus. Dernière étoile débloquée !';
     } else {
       if (navigator.vibrate) navigator.vibrate([50, 100, 50, 100, 50]); 
-      if (resultBox) { resultBox.classList.remove('fail-effect'); void resultBox.offsetWidth; resultBox.classList.add('fail-effect', 'fail'); }
+      if (resultBox) {
+        resultBox.classList.remove('fail-effect'); 
+        void resultBox.offsetWidth; 
+        resultBox.classList.add('fail-effect', 'fail');
+      }
+
       if (resultIcon) resultIcon.textContent = '✗';
       if (resultTitle) resultTitle.textContent = 'CLIENTS MÉCONTENTS';
       if (resultText) resultText.textContent = 'Il fallait au moins 3/5. Profite de l\'échange pour découvrir ces métiers ! Étoile verrouillée.';

@@ -18,41 +18,39 @@
   font-size: 1rem; font-weight: 700; border-radius: 12px;
 }
 .table-phase-msg.memo { color: var(--gold); background: rgba(255, 215, 0, 0.08); border: 1px solid rgba(255, 215, 0, 0.3); }
-.table-phase-msg.pick { color: var(--cyan); background: rgba(0, 212, 255, 0.08); border: 1px solid rgba(0, 212, 255, 0.3); }
+.table-phase-msg.pick { color: var(--cyan); background: rgba(0, 212, 255, 0.08); border: 1px solid rgba(0, 212, 255, 0.3); animation: tBlink 0.8s ease infinite alternate; }
 
-/* Zone de référence */
-.table-ref-zone { text-align: center; margin-bottom: 1.5rem; }
-.table-setting {
-  display: inline-flex; flex-direction: column; gap: 0.4rem; padding: 1.5rem 2rem;
-  background: rgba(255, 255, 255, 0.03); border: 2px solid var(--border);
-  border-radius: 16px; margin: 0 auto;
+@keyframes tBlink { from { opacity: 0.7; } to { opacity: 1; } }
+
+.table-reference {
+  max-width: 320px; margin: 0 auto 1.5rem; padding: 1.2rem;
+  background: rgba(255, 215, 0, 0.06); border: 2px solid rgba(255, 215, 0, 0.4);
+  border-radius: 16px; text-align: center; box-shadow: 0 0 25px rgba(255, 215, 0, 0.1);
 }
-.table-setting.reference { border-color: var(--gold); background: rgba(255, 215, 0, 0.05); }
-.table-ref-label { font-size: 0.7rem; font-weight: 700; color: var(--gold); letter-spacing: 0.1em; display: block; margin-bottom: 0.5rem; }
 
-.table-setting-row { display: flex; gap: 0.8rem; justify-content: center; }
+.table-ref-label { font-size: 0.7rem; color: var(--gold); letter-spacing: 0.1em; font-weight: 700; margin-bottom: 0.5rem; display: block; }
+
+.table-setting-row { display: flex; justify-content: center; gap: 0.4rem; padding: 0.3rem 0; }
+
 .table-cell {
-  width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;
-  font-size: 1.8rem; background: rgba(0, 0, 0, 0.4); border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.05);
+  width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;
+  font-size: 1.6rem; border-radius: 8px; background: rgba(0, 0, 0, 0.2);
 }
-.table-cell.empty { font-size: 1rem; color: rgba(255, 255, 255, 0.1); border: 1px dashed rgba(255, 255, 255, 0.1); background: transparent; }
+.table-cell.empty { opacity: 0.2; }
 
-/* Zone de choix */
-.table-pick-zone { max-width: 500px; margin: 0 auto; }
-.table-options { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+.table-options {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem;
+  max-width: 500px; margin: 0 auto 1rem;
+}
 
 .table-option {
-  background: var(--bg-card); border: 2px solid var(--border); border-radius: 16px;
-  padding: 1rem 0.5rem; display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: all 0.2s;
+  padding: 1rem; background: rgba(255, 255, 255, 0.02);
+  border: 2px solid var(--border); border-radius: 16px;
+  cursor: pointer; transition: all 0.3s; text-align: center;
 }
-.table-option-label { font-size: 0.7rem; font-weight: 700; color: var(--gray); letter-spacing: 0.1em; margin-bottom: 0.6rem; }
+.table-option:hover { border-color: var(--cyan); background: rgba(0, 212, 255, 0.05); transform: scale(1.02); }
+.table-option-label { font-size: 0.7rem; color: var(--gray); margin-bottom: 0.5rem; display: block; letter-spacing: 0.1em; font-weight: 600; }
 
-/* --- ANTI-STICKY HOVER CSS --- */
-@media (hover: hover) and (pointer: fine) {
-  .table-option:hover { border-color: var(--cyan); background: rgba(0, 212, 255, 0.08); transform: scale(1.03); }
-}
-
-.table-option:active { transform: scale(0.97); }
 .table-option.correct-pick { border-color: var(--green); background: rgba(0, 255, 136, 0.1); pointer-events: none; }
 .table-option.wrong-pick { border-color: var(--red); background: rgba(255, 68, 68, 0.1); pointer-events: none; opacity: 0.5; animation: shake 0.4s ease; }
 .table-option.disabled { pointer-events: none; opacity: 0.6; }
@@ -72,6 +70,15 @@
 }
 
 @media (max-width: 450px) {
-  .table-options { grid-template-columns: 1fr; }
-  .table-cell { width: 40px; height: 40px; font-size: 1.5rem; }
+  .table-options { grid-template-columns: 1fr; max-width: 300px; }
+  .table-cell { width: 36px; height: 36px; font-size: 1.3rem; }
 }
+
+/* =================================================================
+   🔍 BOOSTER DE TAILLE DE TEXTE (MODE ÉQUILIBRÉ)
+   ================================================================= */
+.table-score-bar { font-size: 1.05rem !important; }
+.table-phase-msg { font-size: 1.15rem !important; }
+.table-ref-label { font-size: 0.9rem !important; }
+.table-option-label { font-size: 0.9rem !important; }
+.table-hint { font-size: 0.95rem !important; }
