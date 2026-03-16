@@ -1,56 +1,50 @@
 document.addEventListener('DOMContentLoaded', function() {
-  var state      = getGameState();
-  var locked     = document.getElementById('locked');
-  var gameArea   = document.getElementById('game-area');
-  var resultDiv  = document.getElementById('result');
-  var phaseEl    = document.getElementById('seq-phase');
-  var livesEl    = document.getElementById('seq-lives');
-  var memoZone   = document.getElementById('memo-zone');
-  var answerZone = document.getElementById('answer-zone');
-  var stepsDisp  = document.getElementById('seq-steps-display');
-  var countdownEl = document.getElementById('seq-countdown');
-  var dropZone   = document.getElementById('seq-drop-zone');
-  var choicesPool = document.getElementById('seq-choices-pool');
-  var feedbackEl = document.getElementById('seq-feedback');
-  var validateBtn = document.getElementById('seq-validate');
-  var undoBtn    = document.getElementById('seq-undo');
+  var state = getGameState();
+  var locked = document.getElementById('locked');
+  var gameArea = document.getElementById('game-area');
+  var resultDiv = document.getElementById('result');
+  var roundEl = document.getElementById('tg-round');
+  var correctEl = document.getElementById('tg-correct');
+  var errorsEl = document.getElementById('tg-errors');
+  var phaseEl = document.getElementById('tg-phase');
+  var refZone = document.getElementById('tg-ref-zone');
+  var pickZone = document.getElementById('tg-pick-zone');
+  var reference = document.getElementById('tg-reference');
+  var options = document.getElementById('tg-options');
+  var timerEl = document.getElementById('tg-timer');
+  var hintEl = document.getElementById('tg-hint');
 
-  // 1. BYPASS LOCK
+  // 1. BYPASS
   if (!state.enigme1 || state.enigme1.completed === null) {
-    if (locked)   locked.classList.remove('hidden');
+    if (locked) locked.classList.remove('hidden');
     if (gameArea) gameArea.classList.add('hidden');
     return;
   }
+
   if (state.quiz && state.quiz.completed !== null) {
     if (gameArea) gameArea.classList.add('hidden');
-    if (locked)   locked.classList.add('hidden');
+    if (locked) locked.classList.add('hidden');
     showResult(state.quiz.completed, state.quiz.score || 0);
     return;
   }
+
   if (locked) locked.classList.add('hidden');
 
-  // 2. CACHER LE JEU
+  // 2. CACHER LE JEU AU DÉMARRAGE
   if (gameArea) gameArea.classList.add('hidden');
 
-  // Exposer au globalTimer pour qu'il puisse afficher le résultat si le temps expire
-  window._showTimerResult = function() {
-    if (state.quiz && state.quiz.completed !== null) return;
-    state.quiz = { completed: false, score: 0 };
-    saveGameState(state);
-    showResult(false, 0);
-  };
-
-  // 3. TUTORIEL
+  // 3. AFFICHER LE TUTORIEL
   Tutorial.show({
-    icon: '📅',
-    title: 'PLANNING ANIMATEUR',
+    icon: '🍽️',
+    title: 'DRESSAGE DE TABLE',
     subtitle: 'ÉPREUVE 2',
-    description: 'Un animateur doit organiser sa journée avec méthode. Sauras-tu reconstituer le bon déroulé ?',
+    description: 'Le sens du détail est primordial en salle. Mémorise le dressage parfait et retrouve-le !',
     steps: [
-      { icon: '👀', text: 'Mémorise les étapes de la journée pendant quelques secondes.' },
-      { icon: '🔀', text: 'Elles seront mélangées : remets-les dans le bon ordre en cliquant dessus.' },
-      { icon: '✅', text: 'Valide ton ordre. Tu as 3 essais maximum !' }
+      { icon: '👁️', text: 'Mémorise le modèle parfait affiché à l\'écran pendant quelques secondes.' },
+      { icon: '🎯', text: 'Retrouve ce <strong>modèle exact</strong> parmi les 4 propositions.' },
+      { icon: '⚠️', text: 'Attention aux pièges : couteaux inversés, verres déplacés...' }
     ],
+    warning: 'Il te faut au moins 4 bonnes réponses sur 5 !',
     buttonText: 'C\'EST PARTI !',
     theme: 'pink'
   }).then(function() {
@@ -59,85 +53,90 @@ document.addEventListener('DOMContentLoaded', function() {
     initGame();
   });
 
-  // 4. DONNÉES — Plannings simplifiés (5 étapes max pour des 3èmes)
-  var plannings = [
-    {
-      title: 'Journée en centre de loisirs',
-      steps: [
-        { icon: '🌅', text: 'Accueil des enfants à l\'arrivée' },
-        { icon: '🎨', text: 'Activités créatives du matin' },
-        { icon: '🍽️', text: 'Déjeuner et temps calme' },
-        { icon: '⚽', text: 'Jeux et sport l\'après-midi' },
-        { icon: '🏠', text: 'Départ et au revoir aux enfants' }
-      ]
-    },
-    {
-      title: 'Préparer une animation',
-      steps: [
-        { icon: '💡', text: 'Choisir l\'activité et le thème' },
-        { icon: '🛒', text: 'Préparer le matériel nécessaire' },
-        { icon: '🤝', text: 'Expliquer les règles aux enfants' },
-        { icon: '🎉', text: 'Réaliser l\'activité avec le groupe' },
-        { icon: '📝', text: 'Faire le bilan avec l\'équipe' }
-      ]
-    },
-    {
-      title: 'Organiser une sortie',
-      steps: [
-        { icon: '📋', text: 'Demander l\'autorisation à la direction' },
-        { icon: '📩', text: 'Envoyer les autorisations aux parents' },
-        { icon: '🚌', text: 'Préparer le transport et les listes' },
-        { icon: '🎒', text: 'Encadrer les enfants pendant la sortie' },
-        { icon: '🏡', text: 'Rentrer et remettre les enfants aux familles' }
-      ]
-    }
-  ];
-
+  // 4. LOGIQUE DU JEU
   function initGame() {
-    var planning = plannings[Math.floor(Math.random() * plannings.length)];
-    var correctOrder = planning.steps.map(function(s) { return s.text; });
-    var lives = 3;
-    var placed = [];
+    // Chaque dressage = grille 2x3 [top-left, top-center, top-right, bot-left, bot-center, bot-right]
+    var rounds = [
+      {
+        name: 'Table simple', timer: 4, correct: ['', '', '🥂', '🍴', '🍽️', '🔪'],
+        wrongs: [
+          ['', '', '🥂', '🔪', '🍽️', '🍴'],  // couteau/fourchette inversés
+          ['', '', '🍴', '🥂', '🍽️', '🔪'],  // verre/fourchette inversés
+          ['', '🥂', '', '🍴', '🍽️', '🔪']   // verre mauvais côté
+        ]
+      },
+      {
+        name: 'Table avec pain', timer: 4, correct: ['🍞', '', '🥂', '🍴', '🍽️', '🔪'],
+        wrongs: [
+          ['', '', '🥂', '🍴', '🍽️', '🔪'],  // pain manquant
+          ['🥂', '', '🍞', '🍴', '🍽️', '🔪'],  // pain/verre inversés
+          ['🍞', '', '🥂', '🔪', '🍽️', '🍴']   // couteau/fourchette inversés
+        ]
+      },
+      {
+        name: 'Table complète', timer: 3, correct: ['🍞', '🥄', '🥂', '🍴', '🍽️', '🔪'],
+        wrongs: [
+          ['🍞', '🥄', '🥂', '🔪', '🍽️', '🍴'],  // fourchette/couteau
+          ['🍞', '🥂', '🥄', '🍴', '🍽️', '🔪'],  // cuillère/verre
+          ['🥂', '🥄', '🍞', '🍴', '🍽️', '🔪']   // pain/verre
+        ]
+      },
+      {
+        name: 'Grand service', timer: 3, correct: ['🍞', '🥄', '🥂', '🍴', '🍽️', '🔪'],
+        wrongs: [
+          ['🍞', '🥄', '🥂', '🍴', '🔪', '🍽️'],  // assiette/couteau
+          ['🍞', '🔪', '🥂', '🍴', '🍽️', '🥄'],  // cuillère/couteau
+          ['🥄', '🍞', '🥂', '🍴', '🍽️', '🔪']   // pain/cuillère
+        ]
+      },
+      {
+        name: 'Service étoilé', timer: 2, correct: ['🍞', '🥄', '🥂', '🍴', '🍽️', '🔪'],
+        wrongs: [
+          ['🍞', '🥄', '🥂', '🍽️', '🍴', '🔪'],  // fourchette/assiette (subtil)
+          ['🍞', '🥄', '🥂', '🍴', '🍽️', '🥂'],  // double verre, pas de couteau
+          ['🍴', '🥄', '🥂', '🍞', '🍽️', '🔪']   // pain/fourchette
+        ]
+      }
+    ];
 
-    function updateLives() {
-      var hearts = '';
-      for (var i = 0; i < 3; i++) hearts += (i < lives ? '❤️' : '🖤');
-      if (livesEl) livesEl.textContent = hearts;
+    var currentRound = 0;
+    var correctCount = 0;
+    var errorCount = 0;
+    var total = rounds.length;
+
+    function updateStats() {
+      if (roundEl) roundEl.textContent = '🍽️ Table ' + (currentRound + 1) + ' / ' + total;
+      if (correctEl) correctEl.textContent = '✅ ' + correctCount;
+      if (errorsEl) errorsEl.textContent = '❌ ' + errorCount;
     }
 
-    // --- PHASE MÉMORISATION ---
-    if (phaseEl) phaseEl.textContent = '📋 Mémorisation';
-    updateLives();
-
-    stepsDisp.innerHTML = '';
-    planning.steps.forEach(function(step, idx) {
-      var div = document.createElement('div');
-      div.className = 'seq-step-shown';
-      div.innerHTML =
-        '<span class="seq-step-num">' + (idx + 1) + '</span>' +
-        '<span class="seq-step-icon">' + step.icon + '</span>' +
-        '<span class="seq-step-text">' + step.text + '</span>';
-      stepsDisp.appendChild(div);
-    });
-
-    var timeLeft = 10;
-    countdownEl.textContent = '⏳ ' + timeLeft;
-    var memoTimer = setInterval(function() {
-      timeLeft--;
-      countdownEl.textContent = '⏳ ' + timeLeft;
-      if (timeLeft <= 0) {
-        clearInterval(memoTimer);
-        startAnswerPhase();
+    function renderSetting(container, grid, label) {
+      container.innerHTML = '';
+      if (label) {
+        var lbl = document.createElement('span');
+        lbl.className = 'table-ref-label';
+        lbl.textContent = label;
+        container.appendChild(lbl);
       }
-    }, 1000);
-
-    function startAnswerPhase() {
-      if (memoZone)   memoZone.classList.add('hidden');
-      if (answerZone) answerZone.classList.remove('hidden');
-      if (phaseEl)    phaseEl.textContent = '🔀 Remets dans l\'ordre';
-      placed = [];
-      renderDropZone();
-      renderChoices();
+      var row1 = document.createElement('div');
+      row1.className = 'table-setting-row';
+      for (var i = 0; i < 3; i++) {
+        var cell = document.createElement('div');
+        cell.className = 'table-cell' + (grid[i] ? '' : ' empty');
+        cell.textContent = grid[i] || '·';
+        row1.appendChild(cell);
+      }
+      container.appendChild(row1);
+      
+      var row2 = document.createElement('div');
+      row2.className = 'table-setting-row';
+      for (var i = 3; i < 6; i++) {
+        var cell = document.createElement('div');
+        cell.className = 'table-cell' + (grid[i] ? '' : ' empty');
+        cell.textContent = grid[i] || '·';
+        row2.appendChild(cell);
+      }
+      container.appendChild(row2);
     }
 
     function shuffle(arr) {
@@ -149,141 +148,146 @@ document.addEventListener('DOMContentLoaded', function() {
       return a;
     }
 
-    var shuffledSteps = shuffle(planning.steps.slice());
+    function startRound() {
+      if (currentRound >= total) { endGame(); return; }
 
-    function renderDropZone() {
-      dropZone.innerHTML = '';
-      if (placed.length === 0) {
-        var empty = document.createElement('div');
-        empty.className = 'seq-drop-empty';
-        empty.textContent = 'Clique sur les étapes ci-dessous pour les placer ici';
-        dropZone.appendChild(empty);
-        return;
-      }
-      placed.forEach(function(stepText, idx) {
-        var step = planning.steps.find(function(s) { return s.text === stepText; });
-        var div = document.createElement('div');
-        div.className = 'seq-placed';
-        div.innerHTML =
-          '<span class="seq-placed-num">' + (idx + 1) + '</span>' +
-          '<span class="seq-placed-icon">' + (step ? step.icon : '📌') + '</span>' +
-          '<span class="seq-placed-text">' + stepText + '</span>';
-        dropZone.appendChild(div);
+      var round = rounds[currentRound];
+      updateStats();
+
+      refZone.style.display = '';
+      pickZone.style.display = 'none';
+      if (phaseEl) { phaseEl.textContent = '👁️ MÉMORISE : ' + round.name; phaseEl.className = 'table-phase-msg memo'; }
+      if (hintEl) hintEl.textContent = 'Observe la position de chaque couvert — ' + round.timer + 's !';
+
+      renderSetting(reference, round.correct, '✨ DRESSAGE CORRECT');
+
+      var countdown = round.timer;
+      if (timerEl) timerEl.textContent = countdown;
+
+      var countInterval = setInterval(function() {
+        countdown--;
+        if (timerEl) timerEl.textContent = countdown;
+        if (countdown <= 0) {
+          clearInterval(countInterval);
+          startPickPhase(round);
+        }
+      }, 1000);
+    }
+
+    function startPickPhase(round) {
+      refZone.style.display = 'none';
+      pickZone.style.display = '';
+      if (phaseEl) { phaseEl.textContent = '🎯 RETROUVE LE BON DRESSAGE !'; phaseEl.className = 'table-phase-msg pick'; }
+      if (hintEl) hintEl.textContent = 'Un seul dressage est correct — les autres ont des erreurs subtiles';
+
+      var allOptions = [{ grid: round.correct, isCorrect: true }];
+      round.wrongs.forEach(function(w) { allOptions.push({ grid: w, isCorrect: false }); });
+      allOptions = shuffle(allOptions);
+
+      options.innerHTML = '';
+      var labels = ['A', 'B', 'C', 'D'];
+
+      allOptions.forEach(function(opt, i) {
+        var el = document.createElement('div');
+        el.className = 'table-option';
+        el.dataset.correct = opt.isCorrect;
+
+        var labelSpan = document.createElement('span');
+        labelSpan.className = 'table-option-label';
+        labelSpan.textContent = 'TABLE ' + labels[i];
+        el.appendChild(labelSpan);
+
+        renderSetting(el, opt.grid);
+
+        el.addEventListener('click', function() { handlePick(el, opt.isCorrect); });
+        options.appendChild(el);
       });
     }
 
-    function renderChoices() {
-      choicesPool.innerHTML = '';
+    function handlePick(el, isCorrect) {
+      var allOpts = options.querySelectorAll('.table-option');
+      allOpts.forEach(function(o) { o.classList.add('disabled'); });
 
-      // --- ANTI-STICKY HOVER JS ---
-      choicesPool.style.pointerEvents = 'none';
-      setTimeout(function() { choicesPool.style.pointerEvents = 'auto'; }, 150);
-      // -----------------------------
-      shuffledSteps.forEach(function(step) {
-        var used = placed.indexOf(step.text) !== -1;
-        var chip = document.createElement('div');
-        chip.className = 'seq-chip' + (used ? ' used' : '');
-        chip.innerHTML = '<span class="seq-chip-icon">' + step.icon + '</span><span>' + step.text + '</span>';
-        chip.addEventListener('click', function() {
-          if (used) return;
-          placed.push(step.text);
-          used = true;
-          chip.classList.add('used');
-          renderDropZone();
+      if (isCorrect) {
+        el.classList.add('correct-pick');
+        el.classList.remove('disabled');
+        correctCount++;
+      } else {
+        el.classList.add('wrong-pick');
+        el.classList.remove('disabled');
+        errorCount++;
+        allOpts.forEach(function(o) {
+          if (o.dataset.correct === 'true') { o.classList.add('correct-pick'); o.classList.remove('disabled'); }
         });
-        choicesPool.appendChild(chip);
-      });
+      }
+
+      updateStats();
+      setTimeout(function() {
+        currentRound++;
+        startRound();
+      }, 1200);
     }
 
-    if (undoBtn) {
-      undoBtn.addEventListener('click', function() {
-        if (placed.length === 0) return;
-        placed.pop();
-        renderDropZone();
-        renderChoices();
-      });
+    function endGame() {
+      var success = correctCount >= 4;
+      if (!state.quiz) state.quiz = { completed: null, score: 0 };
+      state.quiz.completed = success;
+      state.quiz.score = correctCount;
+      saveGameState(state);
+
+      setTimeout(function() {
+        if (gameArea) gameArea.classList.add('hidden');
+        showResult(success, correctCount);
+      }, 400);
     }
 
-    if (validateBtn) {
-      validateBtn.addEventListener('click', function() {
-        if (placed.length < correctOrder.length) {
-          if (feedbackEl) { feedbackEl.textContent = '⚠️ Place toutes les étapes d\'abord !'; feedbackEl.className = 'seq-feedback wrong'; }
-          return;
-        }
-
-        var allCorrect = true;
-        for (var i = 0; i < correctOrder.length; i++) {
-          if (placed[i] !== correctOrder[i]) { allCorrect = false; break; }
-        }
-
-        if (allCorrect) {
-          if (feedbackEl) { feedbackEl.textContent = '✅ Parfait ! Le planning est dans le bon ordre !'; feedbackEl.className = 'seq-feedback correct'; }
-          state.quiz = { completed: true, score: lives, planningTitle: planning.title };
-          saveGameState(state);
-          if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
-          setTimeout(function() {
-            if (gameArea) gameArea.classList.add('hidden');
-            showResult(true, lives);
-          }, 1500);
-        } else {
-          lives--;
-          updateLives();
-          if (navigator.vibrate) navigator.vibrate([50, 50, 50]);
-
-          if (lives <= 0) {
-            if (feedbackEl) { feedbackEl.textContent = '❌ Plus d\'essais ! Voici le bon ordre.'; feedbackEl.className = 'seq-feedback wrong'; }
-            placed = correctOrder.slice();
-            renderDropZone();
-            renderChoices();
-            if (validateBtn) validateBtn.disabled = true;
-            if (undoBtn) undoBtn.disabled = true;
-            state.quiz = { completed: false, score: 0, planningTitle: planning.title, correctOrder: correctOrder };
-            saveGameState(state);
-            setTimeout(function() {
-              if (gameArea) gameArea.classList.add('hidden');
-              showResult(false, 0);
-            }, 2500);
-          } else {
-            if (feedbackEl) {
-              feedbackEl.textContent = '❌ Pas tout à fait… ' + lives + ' essai(s) restant(s). Réessaie !';
-              feedbackEl.className = 'seq-feedback wrong';
-            }
-            placed = [];
-            renderDropZone();
-            renderChoices();
-          }
-        }
-      });
-    }
+    updateStats();
+    setTimeout(function() { startRound(); }, 600);
   }
 
-  // 5. SHOWRESULT
+  // 5. FONCTION SHOWRESULT HORS DE INITGAME
   function showResult(success, score) {
     if (resultDiv) resultDiv.classList.remove('hidden');
-    if (gameArea)  gameArea.classList.add('hidden');
-    if (locked)    locked.classList.add('hidden');
+    if (gameArea) gameArea.classList.add('hidden');
+    if (locked) locked.classList.add('hidden');
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
-    var resultBox   = document.getElementById('result-box');
-    var resultIcon  = document.getElementById('result-icon');
+    var resultBox = document.getElementById('result-box');
+    var resultIcon = document.getElementById('result-icon');
     var resultTitle = document.getElementById('result-title');
-    var resultText  = document.getElementById('result-text');
+    var resultText = document.getElementById('result-text');
     var resultScore = document.getElementById('result-score');
-    if (resultScore) resultScore.textContent = 'Planning réussi avec ' + score + ' essai(s) restant(s)';
+
+    if (resultScore) resultScore.textContent = score + ' / 5 tables correctes';
 
     if (success) {
-      if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
-      if (window.confetti) confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 }, colors: ['#ff69b4', '#c8a96e'] });
-      if (resultBox) { resultBox.classList.remove('success-effect'); void resultBox.offsetWidth; resultBox.classList.add('success-effect', 'success'); }
-      if (resultIcon)  resultIcon.textContent  = '✓';
-      if (resultTitle) resultTitle.textContent = 'PLANNING MAÎTRISÉ !';
-      if (resultText)  resultText.textContent  = 'Tu sais organiser une journée d\'animation ! L\'intervenant approfondira avec toi. Badge débloqué !';
+      if (navigator.vibrate) navigator.vibrate([100, 50, 100]); 
+      if (window.confetti) {
+        confetti({ 
+          particleCount: 150, spread: 80, origin: { y: 0.6 },
+          colors: ['#ff007f', '#00d4ff', '#ffd700', '#a855f7'], 
+          disableForReducedMotion: true
+        });
+      }
+
+      if (resultBox) {
+        resultBox.classList.remove('success-effect'); 
+        void resultBox.offsetWidth; 
+        resultBox.classList.add('success-effect', 'success');
+      }
+      if (resultIcon) resultIcon.textContent = '✓';
+      if (resultTitle) resultTitle.textContent = 'TABLE PARFAITE !';
+      if (resultText) resultText.textContent = 'Tu as l\'œil d\'un maître d\'hôtel. Étoile débloquée !';
     } else {
-      if (navigator.vibrate) navigator.vibrate([50, 100, 50, 100, 50]);
-      if (resultBox) { resultBox.classList.remove('fail-effect'); void resultBox.offsetWidth; resultBox.classList.add('fail-effect', 'fail'); }
-      if (resultIcon)  resultIcon.textContent  = '✗';
-      if (resultTitle) resultTitle.textContent = 'PLANNING À RETRAVAILLER';
-      if (resultText)  resultText.textContent  = 'L\'ordre n\'était pas bon mais tu apprends vite ! L\'intervenant t\'expliquera la logique. Badge verrouillé.';
+      if (navigator.vibrate) navigator.vibrate([50, 100, 50, 100, 50]); 
+      if (resultBox) {
+        resultBox.classList.remove('fail-effect'); 
+        void resultBox.offsetWidth; 
+        resultBox.classList.add('fail-effect', 'fail');
+      }
+      if (resultIcon) resultIcon.textContent = '✗';
+      if (resultTitle) resultTitle.textContent = 'DRESSAGE INCORRECT';
+      if (resultText) resultText.textContent = 'Il fallait reconnaître au moins 4 dressages sur 5. Étoile verrouillée.';
     }
   }
 });
