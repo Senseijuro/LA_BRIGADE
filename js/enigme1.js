@@ -130,6 +130,10 @@ document.addEventListener('DOMContentLoaded', function() {
       options = shuffle(options);
 
       choicesEl.innerHTML = '';
+      // --- ANTI-STICKY HOVER JS ---
+      choicesEl.style.pointerEvents = 'none';
+      setTimeout(function() { choicesEl.style.pointerEvents = 'auto'; }, 150);
+      // -----------------------------
       isProcessing = false;
 
       options.forEach(function(opt) {

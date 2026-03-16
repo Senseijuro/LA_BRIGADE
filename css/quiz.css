@@ -48,7 +48,13 @@
   border: 2px solid var(--border); border-radius: 16px;
   cursor: pointer; transition: all 0.3s; text-align: center;
 }
-.table-option:hover { border-color: var(--cyan); background: rgba(0, 212, 255, 0.05); transform: scale(1.02); }
+/* ANTI-STICKY HOVER */
+@media (hover: hover) and (pointer: fine) {
+  .table-option:hover { border-color: var(--cyan); background: rgba(0, 212, 255, 0.05); transform: scale(1.02); }
+}
+@media (hover: none) {
+  .table-option:hover { border-color: var(--border) !important; background: rgba(255, 255, 255, 0.02) !important; transform: none !important; }
+}
 .table-option-label { font-size: 0.7rem; color: var(--gray); margin-bottom: 0.5rem; display: block; letter-spacing: 0.1em; font-weight: 600; }
 
 .table-option.correct-pick { border-color: var(--green); background: rgba(0, 255, 136, 0.1); pointer-events: none; }

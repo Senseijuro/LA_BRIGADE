@@ -185,6 +185,10 @@ document.addEventListener('DOMContentLoaded', function() {
       allOptions = shuffle(allOptions);
 
       options.innerHTML = '';
+      // --- ANTI-STICKY HOVER JS ---
+      options.style.pointerEvents = 'none';
+      setTimeout(function() { options.style.pointerEvents = 'auto'; }, 150);
+      // -----------------------------
       var labels = ['A', 'B', 'C', 'D'];
 
       allOptions.forEach(function(opt, i) {

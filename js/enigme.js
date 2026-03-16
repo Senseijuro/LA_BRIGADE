@@ -136,6 +136,10 @@ document.addEventListener('DOMContentLoaded', function() {
       var options = shuffle([correctProObj].concat(others));
 
       prosEl.innerHTML = '';
+      // --- ANTI-STICKY HOVER JS ---
+      prosEl.style.pointerEvents = 'none';
+      setTimeout(function() { prosEl.style.pointerEvents = 'auto'; }, 150);
+      // -----------------------------
       isProcessing = false;
 
       options.forEach(function(pro) {
