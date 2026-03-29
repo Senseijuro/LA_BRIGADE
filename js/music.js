@@ -15,11 +15,18 @@
   
   if (playPromise !== undefined) {
     playPromise.catch(function() {
-      // Si autoplay bloqué, lancer au premier clic
-      document.addEventListener('click', function startMusic() {
-        music.play();
-        document.removeEventListener('click', startMusic);
-      }, { once: true });
+      // Si autoplay bloqué, relancer à chaque clic jusqu'à ce que ça marche
+      function startMusic() {
+        music.play().then(function() {
+          // Musique lancée, on retire le listener
+          document.removeEventListener('click', startMusic);
+          document.removeEventListener('touchstart', startMusic);
+        }).catch(function() {
+          // Toujours bloqué, on garde le listener pour le prochain clic
+        });
+      }
+      document.addEventListener('click', startMusic);
+      document.addEventListener('touchstart', startMusic);
     });
   }
   
