@@ -53,12 +53,12 @@
   .table-option:hover { border-color: var(--cyan); background: rgba(0, 212, 255, 0.05); transform: scale(1.02); }
 }
 @media (hover: none) {
-  .table-option:hover { border-color: var(--border) !important; background: rgba(255, 255, 255, 0.02) !important; transform: none !important; }
+  .table-option:not(.correct-pick):not(.wrong-pick):hover { border-color: var(--border) !important; background: rgba(255, 255, 255, 0.02) !important; transform: none !important; }
 }
 .table-option-label { font-size: 0.7rem; color: var(--gray); margin-bottom: 0.5rem; display: block; letter-spacing: 0.1em; font-weight: 600; }
 
-.table-option.correct-pick { border-color: var(--green); background: rgba(0, 255, 136, 0.1); pointer-events: none; }
-.table-option.wrong-pick { border-color: var(--red); background: rgba(255, 68, 68, 0.1); pointer-events: none; opacity: 0.5; animation: shake 0.4s ease; }
+.table-option.correct-pick { border-color: var(--green) !important; background: rgba(0, 255, 136, 0.1) !important; pointer-events: none; }
+.table-option.wrong-pick { border-color: var(--red) !important; background: rgba(255, 68, 68, 0.1) !important; pointer-events: none; opacity: 0.5; animation: shake 0.4s ease; }
 .table-option.disabled { pointer-events: none; opacity: 0.6; }
 
 .table-timer-bar { text-align: center; margin-bottom: 1rem; }
