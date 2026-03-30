@@ -45,15 +45,15 @@
   .hotel-pro:hover { border-color: var(--cyan); background: rgba(0, 212, 255, 0.05); transform: translateY(-3px); }
 }
 @media (hover: none) {
-  .hotel-pro:not(.correct-pick):not(.wrong-pick):hover { border-color: var(--border) !important; background: rgba(255, 255, 255, 0.03) !important; transform: none !important; }
+  .hotel-pro:hover { border-color: var(--border) !important; background: rgba(255, 255, 255, 0.03) !important; transform: none !important; }
 }
 .hotel-pro-emoji { font-size: 2rem; }
 .hotel-pro-name { font-size: 0.75rem; color: var(--white); font-weight: 600; }
 .hotel-pro-role { font-size: 0.6rem; color: var(--gray); }
 
-.hotel-pro.correct-pick { border-color: var(--green) !important; background: rgba(0, 255, 136, 0.1) !important; pointer-events: none; }
-.hotel-pro.correct-pick .hotel-pro-name { color: var(--green) !important; }
-.hotel-pro.wrong-pick { border-color: var(--red) !important; background: rgba(255, 68, 68, 0.1) !important; pointer-events: none; opacity: 0.4; }
+.hotel-pro.correct-pick { border-color: var(--green); background: rgba(0, 255, 136, 0.1); pointer-events: none; }
+.hotel-pro.correct-pick .hotel-pro-name { color: var(--green); }
+.hotel-pro.wrong-pick { border-color: var(--red); background: rgba(255, 68, 68, 0.1); pointer-events: none; opacity: 0.4; }
 .hotel-pro.disabled { pointer-events: none; opacity: 0.5; }
 .hotel-pro.reveal { border-color: var(--green); background: rgba(0, 255, 136, 0.08); }
 
@@ -81,3 +81,22 @@
 .hotel-pro-name { font-size: 0.95rem !important; }
 .hotel-pro-role { font-size: 0.85rem !important; }
 .hotel-hint { font-size: 0.95rem !important; }
+/* =================================================================
+   ÉCRAN FORMEZ VOS ÉQUIPES / CHANGER DE JOUEUR
+   ================================================================= */
+.tt-change-overlay {
+  position: fixed; inset: 0; z-index: 9999;
+  background: rgba(0, 0, 0, 0.92);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; transition: opacity 0.3s;
+  touch-action: manipulation;
+}
+.tt-change-overlay.visible { opacity: 1; }
+.tt-change-content { text-align: center; animation: tt-change-pop 0.4s ease; }
+.tt-change-icon { font-size: 4rem; margin-bottom: 1rem; animation: tt-change-spin 1s ease infinite; }
+.tt-change-text { font-size: 2.2rem; font-weight: 900; color: var(--cyan); text-transform: uppercase; letter-spacing: 0.15em; text-shadow: 0 0 30px rgba(0, 212, 255, 0.5); margin-bottom: 0.5rem; }
+.tt-change-wave { font-size: 1rem; color: var(--gray); font-weight: 600; letter-spacing: 0.1em; margin-bottom: 1.5rem; }
+.tt-change-countdown { font-size: 4rem; font-weight: 900; color: var(--pink); text-shadow: 0 0 40px rgba(255, 0, 127, 0.6); animation: tt-countdown-pulse 0.7s ease infinite; }
+@keyframes tt-change-pop { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+@keyframes tt-change-spin { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(180deg); } }
+@keyframes tt-countdown-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.3); } }
