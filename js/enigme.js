@@ -45,9 +45,42 @@ document.addEventListener('DOMContentLoaded', function() {
     theme: 'cyan'
   }).then(function() {
     if (window.globalTimer) globalTimer.start();
-    if (gameArea) gameArea.classList.remove('hidden');
-    initGame();
+    showTeamScreen('ÉPREUVE 3', function() {
+      if (gameArea) gameArea.classList.remove('hidden');
+      initGame();
+    });
   });
+
+  // --- ÉCRAN TRAVAILLEZ EN ÉQUIPE ---
+  function showTeamScreen(label, callback) {
+    var overlay = document.createElement('div');
+    overlay.className = 'tt-change-overlay';
+    overlay.innerHTML =
+      '<div class="tt-change-content">' +
+        '<div class="tt-change-icon">👥</div>' +
+        '<div class="tt-change-text">TRAVAILLEZ EN ÉQUIPE</div>' +
+        '<div class="tt-change-wave">' + label + '</div>' +
+        '<div class="tt-change-countdown" id="tt-countdown">3</div>' +
+      '</div>';
+    document.body.appendChild(overlay);
+    void overlay.offsetWidth;
+    overlay.classList.add('visible');
+
+    var count = 3;
+    var countEl = document.getElementById('tt-countdown');
+    var countInterval = setInterval(function() {
+      count--;
+      if (countEl) countEl.textContent = count;
+      if (count <= 0) {
+        clearInterval(countInterval);
+        overlay.classList.remove('visible');
+        setTimeout(function() {
+          if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
+          callback();
+        }, 300);
+      }
+    }, 700);
+  }
 
   // 4. LOGIQUE DU JEU
   function initGame() {
