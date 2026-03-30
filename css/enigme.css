@@ -45,15 +45,15 @@
   .hotel-pro:hover { border-color: var(--cyan); background: rgba(0, 212, 255, 0.05); transform: translateY(-3px); }
 }
 @media (hover: none) {
-  .hotel-pro:hover { border-color: var(--border) !important; background: rgba(255, 255, 255, 0.03) !important; transform: none !important; }
+  .hotel-pro:not(.correct-pick):not(.wrong-pick):hover { border-color: var(--border) !important; background: rgba(255, 255, 255, 0.03) !important; transform: none !important; }
 }
 .hotel-pro-emoji { font-size: 2rem; }
 .hotel-pro-name { font-size: 0.75rem; color: var(--white); font-weight: 600; }
 .hotel-pro-role { font-size: 0.6rem; color: var(--gray); }
 
-.hotel-pro.correct-pick { border-color: var(--green); background: rgba(0, 255, 136, 0.1); pointer-events: none; }
-.hotel-pro.correct-pick .hotel-pro-name { color: var(--green); }
-.hotel-pro.wrong-pick { border-color: var(--red); background: rgba(255, 68, 68, 0.1); pointer-events: none; opacity: 0.4; }
+.hotel-pro.correct-pick { border-color: var(--green) !important; background: rgba(0, 255, 136, 0.1) !important; pointer-events: none; }
+.hotel-pro.correct-pick .hotel-pro-name { color: var(--green) !important; }
+.hotel-pro.wrong-pick { border-color: var(--red) !important; background: rgba(255, 68, 68, 0.1) !important; pointer-events: none; opacity: 0.4; }
 .hotel-pro.disabled { pointer-events: none; opacity: 0.5; }
 .hotel-pro.reveal { border-color: var(--green); background: rgba(0, 255, 136, 0.08); }
 
