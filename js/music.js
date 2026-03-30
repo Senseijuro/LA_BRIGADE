@@ -26,7 +26,7 @@ var MUSIC_CONFIG = {
   SPEED_VOLUME: 0.3,
   FADE_DURATION: 800,
   HURRYUP_ORDER_KEY: 'hurryup_first_order',
-  FIRST_ORDER: 1
+  FIRST_ORDER: 1  // Numéro de la première épreuve → reset auto au chargement
 };
 // ==========================================
 
@@ -38,16 +38,17 @@ var MUSIC_CONFIG = {
   var started = false;
   var speedSwitched = false;
   var speedCheckInterval = null;
-  var userMuted = false; // état mute choisi par l'utilisateur
 
+  // Numéro d'ordre de cette page (défini dans le HTML, défaut 99 si absent)
   var myOrder = (typeof window.EPREUVE_ORDER !== 'undefined') ? window.EPREUVE_ORDER : 99;
 
-  // Reset auto sur épreuve 1
+  // --- Reset automatique quand on charge la première épreuve ---
+  // Si on est sur l'épreuve 1, c'est forcément un nouveau groupe → on efface
   if (myOrder === MUSIC_CONFIG.FIRST_ORDER) {
     localStorage.removeItem(MUSIC_CONFIG.HURRYUP_ORDER_KEY);
   }
 
-  // --- Détecter les fichiers speed ---
+  // --- Détecter les fichiers speed automatiquement ---
   var normalSrc = '';
   var speedSrc = '';
   var speedNeutreSrc = '';
@@ -99,91 +100,70 @@ var MUSIC_CONFIG = {
     });
   }
 
-  // --- Switch vers la version SPEED (sans micro-fuite audio) ---
+  // --- Switch vers la version SPEED ---
   function switchToSpeed() {
     if (speedSwitched || !speedSrc) return;
     speedSwitched = true;
 
-    // Sauvegarder l'état mute utilisateur
-    userMuted = music.muted;
+    var wasMuted = music.muted;
 
-    // ÉTAPE 1 : SILENCE IMMÉDIAT — aucun son ne doit sortir
-    music.muted = true;
-    music.pause();
-    music.volume = 0;
-
-    // Déterminer quel fichier speed jouer
+    // Récupérer l'ordre de la 1ère épreuve qui a joué le hurry up
     var firstOrder = localStorage.getItem(MUSIC_CONFIG.HURRYUP_ORDER_KEY);
     firstOrder = firstOrder !== null ? parseInt(firstOrder, 10) : null;
 
     var targetSrc;
+
     if (firstOrder === null) {
+      // Personne n'a encore joué le hurry up → cette page est la première
       localStorage.setItem(MUSIC_CONFIG.HURRYUP_ORDER_KEY, myOrder);
       targetSrc = speedSrc; // Avec Hurry Up
     } else {
+      // Une épreuve a déjà joué le hurry up → neutre
       targetSrc = speedNeutreSrc; // Sans Hurry Up
     }
 
-    // ÉTAPE 2 : Créer un NOUVEL élément audio pour éviter toute fuite
-    var speedAudio = new Audio();
-    speedAudio.loop = true;
-    speedAudio.volume = 0;
-    speedAudio.muted = true; // Mute tant que pas prêt
-    speedAudio.src = targetSrc;
-    speedAudio.preload = 'auto';
+    // Coupure : mute + volume 0 + pause
+    music.muted = true;
+    music.volume = 0;
+    music.pause();
 
-    speedAudio.addEventListener('canplaythrough', function onReady() {
-      speedAudio.removeEventListener('canplaythrough', onReady);
+    // Changer la source
+    if (sourceEl) sourceEl.src = targetSrc;
+    music.src = targetSrc;
+    music.currentTime = 0;
+    music.loop = true;
 
-      // ÉTAPE 3 : Lancer la lecture en silence total
-      speedAudio.currentTime = 0;
-      var playPromise = speedAudio.play();
+    // Attendre que le nouveau fichier soit prêt
+    music.oncanplay = function() {
+      music.oncanplay = null;
+      music.muted = wasMuted;
+      music.volume = 0;
 
-      function startFadeIn() {
-        // ÉTAPE 4 : Dé-muter SEULEMENT maintenant et fade in
-        speedAudio.muted = userMuted; // Restaurer le choix utilisateur
-        speedAudio.volume = 0;
-
-        var fadeSteps = 20;
-        var fadeStepTime = MUSIC_CONFIG.FADE_DURATION / fadeSteps;
-        var targetVol = MUSIC_CONFIG.SPEED_VOLUME;
-        var inCount = 0;
-
-        var fadeIn = setInterval(function() {
-          inCount++;
-          speedAudio.volume = Math.min(targetVol, (targetVol / fadeSteps) * inCount);
-          if (inCount >= fadeSteps) {
-            clearInterval(fadeIn);
-            speedAudio.volume = targetVol;
-          }
-        }, fadeStepTime);
-      }
-
+      var playPromise = music.play();
       if (playPromise !== undefined) {
-        playPromise.then(startFadeIn).catch(startFadeIn);
+        playPromise.then(fadeInSpeed).catch(fadeInSpeed);
       } else {
-        startFadeIn();
+        fadeInSpeed();
       }
+    };
 
-      // Remplacer la référence pour le bouton mute
-      music = speedAudio;
-    });
-
-    // Fallback si canplaythrough ne fire pas dans les 3s
-    setTimeout(function() {
-      if (speedAudio.readyState >= 3) return; // Déjà prêt
-      // Forcer la lecture même si pas totalement chargé
-      speedAudio.muted = userMuted;
-      speedAudio.volume = 0;
-      speedAudio.play().catch(function() {});
-      setTimeout(function() {
-        speedAudio.volume = MUSIC_CONFIG.SPEED_VOLUME;
-        music = speedAudio;
-      }, 200);
-    }, 3000);
+    function fadeInSpeed() {
+      var fadeSteps = 20;
+      var fadeStepTime = MUSIC_CONFIG.FADE_DURATION / fadeSteps;
+      var targetVol = MUSIC_CONFIG.SPEED_VOLUME;
+      var inCount = 0;
+      var fadeIn = setInterval(function() {
+        inCount++;
+        music.volume = Math.min(targetVol, (targetVol / fadeSteps) * inCount);
+        if (inCount >= fadeSteps) {
+          clearInterval(fadeIn);
+          music.volume = targetVol;
+        }
+      }, fadeStepTime);
+    }
   }
 
-  // --- Vérifier si le fichier speed existe ---
+  // --- Vérifier si le fichier speed existe réellement ---
   function checkSpeedFileExists(callback) {
     if (!speedSrc) { callback(false); return; }
     var xhr = new XMLHttpRequest();
@@ -230,12 +210,10 @@ var MUSIC_CONFIG = {
     e.stopPropagation();
     if (music.muted) {
       music.muted = false;
-      userMuted = false;
       musicBtn.innerHTML = '🔊';
       musicBtn.style.opacity = '1';
     } else {
       music.muted = true;
-      userMuted = true;
       musicBtn.innerHTML = '🔇';
       musicBtn.style.opacity = '0.5';
     }
