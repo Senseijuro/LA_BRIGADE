@@ -201,13 +201,23 @@
     if (display) display.textContent = fmtTime(remaining);
     if (fill) fill.style.width = ((remaining / TIMER_DURATION) * 100) + '%';
 
-    // Changement de couleur
+    // Changement de couleur + effet hurry à 60s
     if (remaining <= 30 && bar) {
       bar.classList.add('danger');
       bar.classList.remove('warning-state');
     } else if (remaining <= 60 && bar) {
       bar.classList.add('warning-state');
       bar.classList.remove('danger');
+    }
+
+    // Effet HURRY : timer en grand qui tremble dès 60s
+    if (remaining <= 60 && bar && !bar.classList.contains('hurry')) {
+      bar.classList.add('hurry');
+    }
+
+    // Effet CRITICAL : tremblement violent dès 10s
+    if (remaining <= 10 && bar && !bar.classList.contains('critical')) {
+      bar.classList.add('critical');
     }
 
     if (remaining <= 0) {
