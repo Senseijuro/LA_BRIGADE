@@ -53,12 +53,43 @@ document.addEventListener('DOMContentLoaded', function() {
     initGame();
   });
 
+  // --- ÉCRAN CHANGER DE JOUEUR ---
+  function showPlayerChange(roundLabel, callback) {
+    var overlay = document.createElement('div');
+    overlay.className = 'tt-change-overlay';
+    overlay.innerHTML =
+      '<div class="tt-change-content">' +
+        '<div class="tt-change-icon">🔄</div>' +
+        '<div class="tt-change-text">CHANGER DE JOUEUR</div>' +
+        '<div class="tt-change-wave">' + roundLabel + '</div>' +
+        '<div class="tt-change-countdown" id="tt-countdown">3</div>' +
+      '</div>';
+    gameArea.appendChild(overlay);
+    void overlay.offsetWidth;
+    overlay.classList.add('visible');
+
+    var count = 3;
+    var countEl = document.getElementById('tt-countdown');
+    var countInterval = setInterval(function() {
+      count--;
+      if (countEl) countEl.textContent = count;
+      if (count <= 0) {
+        clearInterval(countInterval);
+        overlay.classList.remove('visible');
+        setTimeout(function() {
+          if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
+          callback();
+        }, 300);
+      }
+    }, 700);
+  }
+
   // 4. LOGIQUE DU JEU
   function initGame() {
     // Chaque dressage = grille 2x3 [top-left, top-center, top-right, bot-left, bot-center, bot-right]
     var rounds = [
       {
-        name: 'Table simple', timer: 4, correct: ['', '', '🥂', '🍴', '🍽️', '🔪'],
+        name: 'Table simple', timer: 6, correct: ['', '', '🥂', '🍴', '🍽️', '🔪'],
         wrongs: [
           ['', '', '🥂', '🔪', '🍽️', '🍴'],  // couteau/fourchette inversés
           ['', '', '🍴', '🥂', '🍽️', '🔪'],  // verre/fourchette inversés
@@ -66,7 +97,7 @@ document.addEventListener('DOMContentLoaded', function() {
         ]
       },
       {
-        name: 'Table avec pain', timer: 4, correct: ['🍞', '', '🥂', '🍴', '🍽️', '🔪'],
+        name: 'Table avec pain', timer: 6, correct: ['🍞', '', '🥂', '🍴', '🍽️', '🔪'],
         wrongs: [
           ['', '', '🥂', '🍴', '🍽️', '🔪'],  // pain manquant
           ['🥂', '', '🍞', '🍴', '🍽️', '🔪'],  // pain/verre inversés
@@ -74,7 +105,7 @@ document.addEventListener('DOMContentLoaded', function() {
         ]
       },
       {
-        name: 'Table complète', timer: 3, correct: ['🍞', '🥄', '🥂', '🍴', '🍽️', '🔪'],
+        name: 'Table complète', timer: 5, correct: ['🍞', '🥄', '🥂', '🍴', '🍽️', '🔪'],
         wrongs: [
           ['🍞', '🥄', '🥂', '🔪', '🍽️', '🍴'],  // fourchette/couteau
           ['🍞', '🥂', '🥄', '🍴', '🍽️', '🔪'],  // cuillère/verre
@@ -82,7 +113,7 @@ document.addEventListener('DOMContentLoaded', function() {
         ]
       },
       {
-        name: 'Grand service', timer: 3, correct: ['🍞', '🥄', '🥂', '🍴', '🍽️', '🔪'],
+        name: 'Grand service', timer: 5, correct: ['🍞', '🥄', '🥂', '🍴', '🍽️', '🔪'],
         wrongs: [
           ['🍞', '🥄', '🥂', '🍴', '🔪', '🍽️'],  // assiette/couteau
           ['🍞', '🔪', '🥂', '🍴', '🍽️', '🥄'],  // cuillère/couteau
@@ -90,7 +121,7 @@ document.addEventListener('DOMContentLoaded', function() {
         ]
       },
       {
-        name: 'Service étoilé', timer: 2, correct: ['🍞', '🥄', '🥂', '🍴', '🍽️', '🔪'],
+        name: 'Service étoilé', timer: 4, correct: ['🍞', '🥄', '🥂', '🍴', '🍽️', '🔪'],
         wrongs: [
           ['🍞', '🥄', '🥂', '🍽️', '🍴', '🔪'],  // fourchette/assiette (subtil)
           ['🍞', '🥄', '🥂', '🍴', '🍽️', '🥂'],  // double verre, pas de couteau
@@ -228,7 +259,10 @@ document.addEventListener('DOMContentLoaded', function() {
       updateStats();
       setTimeout(function() {
         currentRound++;
-        startRound();
+        if (currentRound >= total) { endGame(); return; }
+        showPlayerChange('TABLE ' + (currentRound + 1) + ' / ' + total, function() {
+          startRound();
+        });
       }, 1200);
     }
 
