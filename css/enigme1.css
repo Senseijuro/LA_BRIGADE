@@ -47,10 +47,10 @@
   .brigade-choice:hover { border-color: var(--cyan); background: rgba(0, 212, 255, 0.05); transform: translateX(5px); }
 }
 @media (hover: none) {
-  .brigade-choice:hover { border-color: var(--border) !important; background: rgba(255, 255, 255, 0.03) !important; transform: none !important; }
+  .brigade-choice:not(.correct-pick):not(.wrong-pick):hover { border-color: var(--border) !important; background: rgba(255, 255, 255, 0.03) !important; transform: none !important; }
 }
-.brigade-choice.correct-pick { border-color: var(--green); background: rgba(0, 255, 136, 0.1); pointer-events: none; color: var(--green); }
-.brigade-choice.wrong-pick { border-color: var(--red); background: rgba(255, 68, 68, 0.1); pointer-events: none; opacity: 0.5; }
+.brigade-choice.correct-pick { border-color: var(--green) !important; background: rgba(0, 255, 136, 0.1) !important; pointer-events: none; color: var(--green); }
+.brigade-choice.wrong-pick { border-color: var(--red) !important; background: rgba(255, 68, 68, 0.1) !important; pointer-events: none; opacity: 0.5; }
 .brigade-choice.disabled { pointer-events: none; opacity: 0.5; }
 .brigade-choice.reveal { border-color: var(--green); background: rgba(0, 255, 136, 0.08); }
 
